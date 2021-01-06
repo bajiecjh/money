@@ -1,4 +1,4 @@
-package com.bajie.network
+package com.bajie.network.bean
 
 /**
 

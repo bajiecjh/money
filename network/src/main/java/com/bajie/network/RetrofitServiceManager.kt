@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 class RetrofitServiceManager {
     private val defaultTimeOut = 5;
     private val defaultReadTimeOut = 10;
-    private val baseUrl = "http://gameweb-zhizun-rd.efunfun.com";
+    private val baseUrl = "https://frodo.douban.com/api/v2/";
     var mRetrofit: Retrofit;
 
 
@@ -44,6 +44,7 @@ class RetrofitServiceManager {
             .addUrlParams("platform", "android")
             .addUrlParams("timestamp", System.currentTimeMillis().toString())
             .addUrlParams("productname", "apk")
+            .addUrlParams("apiKey", "054022eaeae0b00e0fc068c0c0a2102a")
             .build();
         okHttpClient.addInterceptor(httpCommonInterceptor);
 

@@ -3,9 +3,8 @@ package com.bajie.network.loader
 
 import com.bajie.network.*
 import com.bajie.network.DataInfoLoad
-import com.bajie.network.DataInfoSubject
+import com.bajie.network.bean.DataInfoSubject
 import io.reactivex.Observable
-import io.reactivex.functions.Function
 import retrofit2.http.*
 
 /**

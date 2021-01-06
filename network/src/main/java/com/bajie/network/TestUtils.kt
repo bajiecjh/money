@@ -1,6 +1,9 @@
 package com.bajie.network
 
+import com.bajie.network.bean.DataInfoSubject
+import com.bajie.network.bean.MovieSubject
 import com.bajie.network.loader.DataInfoLoader
+import com.bajie.network.loader.MovieLoader
 
 /**
 
@@ -10,7 +13,6 @@ import com.bajie.network.loader.DataInfoLoader
 class TestUtils {
     companion object {
         private var instance: TestUtils? = null;
-        private val BASE_URL = "http://gameweb-zhizun-rd.efunfun.com";
         fun getInstance(): TestUtils? {
             if(instance == null) {
                 instance = TestUtils();
@@ -26,6 +28,13 @@ class TestUtils {
         };
     }
 
+    public fun getMovies() {
+        val loader = MovieLoader();
+        loader.getMovies()?.subscribe{ t:MovieSubject ->
+            println(t);
+        }
+    }
+
     public fun request() {
 //        val retrofit: Retrofit = Retrofit.Builder()
 //            .baseUrl(BASE_URL)
@@ -34,7 +43,7 @@ class TestUtils {
 //            .addConverterFactory(GsonConverterFactory.create())
 //            .build();
 //        val movieService: MovieService = retrofit.create(MovieService::class.java);
-        val movieService: MovieService = RetrofitServiceManager.getInstance().create(MovieService::class.java);
+//        val movieService: MovieService = RetrofitServiceManager.getInstance().create(MovieService::class.java);
 
 
 //        val subscription = movieService.getDataInfoURL("android")
