@@ -1,12 +1,12 @@
-package com.bajie.money
+package com.bajie.money.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bajie.money.R
 import com.bajie.money.viewmodel.MainViewmodel
-import com.bajie.network.TestUtils
 
 class MainActivity : AppCompatActivity() {
     private lateinit var model: MainViewmodel;
