@@ -1,4 +1,4 @@
-package com.bajie.money.model
+package com.bajie.money.model.data
 
 /**
 

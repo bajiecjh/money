@@ -5,6 +5,7 @@ import com.bajie.network.*
 import com.bajie.network.DataInfoLoad
 import com.bajie.network.bean.DataInfoSubject
 import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.*
 
 /**
@@ -18,7 +19,7 @@ class DataInfoLoader: ObjectLoader {
     constructor() {
         dataInfoService = RetrofitServiceManager.getInstance().create(DataInfoService::class.java);
     }
-    public fun getDataInfoURL(): Observable<DataInfoSubject?>? {
+    public fun getDataInfoURL(): Single<DataInfoSubject?>? {
         val load = DataInfoLoad<DataInfoSubject>();
         return observer(dataInfoService.getDataInfoURL("android"))!!.map(load);
 
@@ -37,7 +38,7 @@ class DataInfoLoader: ObjectLoader {
 
         @FormUrlEncoded
         @POST("AppAjaxs/GetDataInfoURL.ashx")
-        fun getDataInfoURL(@Field("platform") platform: String): Observable<BaseResponse<DataInfoSubject>>;
+        fun getDataInfoURL(@Field("platform") platform: String): Single<BaseResponse<DataInfoSubject>>;
     }
 }
 

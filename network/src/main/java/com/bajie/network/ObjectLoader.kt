@@ -1,6 +1,7 @@
 package com.bajie.network
 
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -12,10 +13,11 @@ import io.reactivex.schedulers.Schedulers
 public open class ObjectLoader {
     constructor() {}
 
-    fun <T> observer(observable: Observable<T>): Observable<T>? {
+    fun <T> observer(observable: Single<T>): Single<T>? {
         return observable
             .subscribeOn(Schedulers.io())
             .unsubscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread()).onErrorResumeNext(HttpErrorHandler());
+            .observeOn(AndroidSchedulers.mainThread())
+            .onErrorResumeNext(HttpErrorHandler());
     }
 }

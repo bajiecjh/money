@@ -1,7 +1,7 @@
 package com.bajie.money.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.bajie.money.model.TestData
+import com.bajie.money.model.data.TestData
 
 /**
 

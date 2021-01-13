@@ -2,6 +2,7 @@ package com.bajie.network
 
 import com.google.gson.JsonParseException
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.functions.Function
 import org.apache.http.conn.ConnectTimeoutException
 import org.json.JSONException
@@ -17,7 +18,7 @@ import javax.net.ssl.SSLHandshakeException
  * bajie on 2020/12/23 22:27
 
  */
-class HttpErrorHandler<T>: Function<Throwable, Observable<T>> {
+class HttpErrorHandler<T>: Function<Throwable, Single<T>> {
     companion object {
         const val UNAUTHORIZED:Int = 401;
         const val FORBIDDEN =  403;
@@ -62,8 +63,8 @@ class HttpErrorHandler<T>: Function<Throwable, Observable<T>> {
         }
 
     }
-    override fun apply(t: Throwable): Observable<T> {
-        return Observable.error(handleException(t));
+    override fun apply(t: Throwable): Single<T> {
+        return Single.error(handleException(t));
     }
 
 

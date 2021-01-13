@@ -3,7 +3,7 @@ package com.bajie.money.viewmodel
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bajie.money.model.TestData
+import com.bajie.money.model.data.TestData
 
 /**
 

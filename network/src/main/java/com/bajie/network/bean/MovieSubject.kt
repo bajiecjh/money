@@ -10,15 +10,15 @@ import com.google.gson.JsonObject
  */
 class MovieSubject {
     var count = 0;
-    lateinit var subject_collection:JsonObject;
-    lateinit var subject_collection_items:JsonArray;
+//    lateinit var subject_collection:JsonObject;
+//    lateinit var subject_collection_items:JsonArray;
     var total = 0;
     var start = 0;
 
     override fun toString(): String {
         return "MovieSubject{count:"+count+
-                ",subject_collection:"+subject_collection.toString()+"" +
-                ",subject_collection_items:"+subject_collection_items.toString()+
+//                ",subject_collection:"+subject_collection.toString()+"" +
+//                ",subject_collection_items:"+subject_collection_items.toString()+
                 ",total:"+total+
                 ",start:"+start+"}";
     }
