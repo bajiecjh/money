@@ -1,12 +1,12 @@
 package com.bajie.money.view
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.R
 import com.bajie.money.databinding.ActivityRemoteBinding
@@ -28,7 +28,7 @@ class RemoteActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_remote);
-        model = ViewModelProvider(this).get(RemoteViewModel::class.java)
+        model = ViewModelProvider(this, SavedStateViewModelFactory(application, this)).get(RemoteViewModel::class.java)
         mBinding.vm = model;
         mBinding.btn.setOnClickListener{
             model.loadRemote()
@@ -37,7 +37,7 @@ class RemoteActivity: AppCompatActivity() {
                     error?.let {
                         Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show();
                     }
-            }
+                }
         }
 
 //

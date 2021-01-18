@@ -17,7 +17,7 @@ public open class ObjectLoader {
         return observable
             .subscribeOn(Schedulers.io())
             .unsubscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+//            .observeOn(AndroidSchedulers.mainThread())
             .onErrorResumeNext(HttpErrorHandler());
     }
 }

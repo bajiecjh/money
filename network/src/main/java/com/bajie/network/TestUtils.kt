@@ -1,9 +1,8 @@
 package com.bajie.network
 
 import com.bajie.network.bean.DataInfoSubject
-import com.bajie.network.bean.MovieSubject
 import com.bajie.network.loader.DataInfoLoader
-import com.bajie.network.loader.MovieLoader
+//import com.bajie.money.model.remote.loader.MovieLoader
 
 /**
 
@@ -28,12 +27,12 @@ class TestUtils {
         };
     }
 
-    public fun getMovies() {
-        val loader = MovieLoader();
-        loader.getMovies()?.subscribe{ t:MovieSubject ->
-            println(t);
-        }
-    }
+//    public fun getMovies() {
+//        val loader = MovieLoader();
+//        loader.getMovies()?.subscribe{ t: com.bajie.money.model.data.MovieSubject ->
+//            println(t);
+//        }
+//    }
 
     public fun request() {
 //        val retrofit: Retrofit = Retrofit.Builder()
