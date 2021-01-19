@@ -31,11 +31,7 @@ class RemoteActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_remote);
 
-
-        val remote = MovieLoader();
-        val local = AppDatabase.getInstance(applicationContext).movieDao();
-        val repo = RemoteRepo(remote, local);
-        val factory = RemoteViewModel.RemoteViewModelFactory(repo);
+        val factory = RemoteViewModel.RemoteViewModelFactory(application);
         model = ViewModelProvider(this, factory).get(RemoteViewModel::class.java);
         mBinding.vm = model;
         mBinding.btn.setOnClickListener{

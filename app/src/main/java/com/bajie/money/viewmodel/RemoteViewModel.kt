@@ -81,9 +81,12 @@ class RemoteViewModel constructor(val repo: RemoteRepo)  : ViewModel() {
 
         })
 
-    class RemoteViewModelFactory(val repo: RemoteRepo): ViewModelProvider.Factory {
+    class RemoteViewModelFactory(val application: Application): ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            val remote = MovieLoader();
+            val local = AppDatabase.getInstance(application).movieDao();
+            val repo = RemoteRepo(remote, local);
             return modelClass.getConstructor(RemoteRepo::class.java).newInstance(repo);
         }
 
