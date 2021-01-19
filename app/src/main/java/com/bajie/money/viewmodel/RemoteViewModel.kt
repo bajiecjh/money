@@ -1,12 +1,9 @@
 package com.bajie.money.viewmodel
 
 import android.app.Application
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bajie.money.model.dao.MovieDao
 import com.bajie.money.model.data.MovieList
 import com.bajie.money.model.data.MovieSubject
 import com.bajie.money.model.loacal.AppDatabase
@@ -25,9 +22,12 @@ import io.reactivex.functions.Consumer
 class RemoteViewModel constructor(val repo: RemoteRepo)  : ViewModel() {
 
 
-    val info = ObservableField<String>("click me");
-    val loading = ObservableBoolean(false);
+//    val info = ObservableField<String>("click me");
+    val info = MutableLiveData<String>("clickme");
+    val loading = MutableLiveData<Boolean>(false);
 
+    fun <T:Any> MutableLiveData<T>.set(value: T ?) = postValue(value);
+    fun <T:Any> MutableLiveData<T>.get() = value;
 
     fun click() {
 //        TestUtils.getInstance()!!.getMovies();
@@ -81,7 +81,7 @@ class RemoteViewModel constructor(val repo: RemoteRepo)  : ViewModel() {
 
         })
 
-    class RemoteViewModelFactory(val application: Application): ViewModelProvider.Factory {
+    class RemoteViewModelFactory(private val application: Application): ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             val remote = MovieLoader();
