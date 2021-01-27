@@ -9,9 +9,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.R
 import com.bajie.money.databinding.ActivityRemoteBinding
-import com.bajie.money.model.loacal.AppDatabase
-import com.bajie.money.model.remote.loader.MovieLoader
-import com.bajie.money.model.repository.RemoteRepo
 import com.bajie.money.viewmodel.RemoteViewModel
 import com.uber.autodispose.AutoDispose
 import com.uber.autodispose.SingleSubscribeProxy

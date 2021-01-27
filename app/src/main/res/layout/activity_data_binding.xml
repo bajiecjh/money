@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="data"
+            type="com.bajie.money.model.data.DataBindingData" />
+        <variable
+            name="presenter"
+            type="com.bajie.money.view.DataBindingActivity.Presenter" />
+        <import type="android.view.View"/>
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.DataBindingActivity">
+
+    <ViewStub
+        android:id="@+id/viewstub"
+        android:inflatedId="@+id/viewstub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout="@layout/viewstub"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/name"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <CheckBox
+        android:id="@+id/check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/web_img"/>
+
+    <ImageView
+        android:id="@+id/web_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="@{checkBox.checked ? View.VISIBLE : View.GONE}"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/viewstub"
+        app:imageUrl="@{data.imgUrl}"
+        app:placeholder="@{@drawable/ic_launcher_round}"/>
+
+
+
+    <EditText
+        android:id="@+id/edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/web_img"
+        app:layout_constraintRight_toLeftOf="@id/name"
+        android:text="@={data.name}"/>
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/web_img"
+        app:layout_constraintLeft_toRightOf="@id/edit_text"
+        android:text="@{data.name}"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@{Integer.toString(data.count)}"/>
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/count"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="() -> presenter.onClickBinding()"
+        android:onClick="@{() -> presenter.onClickBinding()}"
+        />
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="presenter.onClick()"
+        android:onClick="@{presenter::onClick}"
+        />
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/include"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        bind:data="@{data}"
+        app:layout_constraintTop_toBottomOf="@id/btn2"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/include"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

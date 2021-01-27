@@ -52,8 +52,8 @@ class RemoteViewModel constructor(val repo: RemoteRepo)  : ViewModel() {
             .doOnSubscribe{loading.set(true)}
             .doAfterTerminate { loading.set(false) }
             .doOnSuccess { t: MovieList ->
-                t?.let {
-//                    System.out.println(t.subject_collection_items.get(0));
+                t.let {
+                    //                    System.out.println(t.subject_collection_items.get(0));
                     t.subject_collection_items.forEach { movie: MovieSubject ->
                         info.set(info.get()+movie.title+",");
                     }
