@@ -5,4 +5,11 @@
     <color name="colorAccent">#03DAC5</color>
 
     <color name="black_transfer">#80000000</color>
+    <color name="white">#ffffff</color>
+    <color name="black_161616">#161616</color>
+    <color name="yellow_EAE02D">#EAE02D</color>
+
+    <color name="font_color_black">#6E6B78</color>
+    <color name="font_color_yellow">#777103</color>
+
 </resources>

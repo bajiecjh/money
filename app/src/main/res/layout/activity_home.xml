@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="java.util.List" />
+        <import type="com.bajie.money.model.data.BottomTabData"/>
+<!--        <variable-->
+<!--            name="tabData"-->
+<!--            type="List&lt;BottomTabData>" />-->
+        <variable
+            name="vm"
+            type="com.bajie.money.viewmodel.HomeViewmodel" />
+    </data>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.MainActivity">
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/white"
+        android:gravity="center">
+
+        <com.bajie.money.view.widget.BottomTabView
+            android:id="@+id/tab1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:data="@{vm.bottomTabData[0]}"/>
+
+        <com.bajie.money.view.widget.BottomTabView
+            android:id="@+id/tab2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:data="@{vm.bottomTabData[1]}"/>
+        <com.bajie.money.view.widget.BottomTabView
+            android:id="@+id/tab3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:data="@{vm.bottomTabData[2]}"/>
+        <com.bajie.money.view.widget.BottomTabView
+            android:id="@+id/tab4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:data="@{vm.bottomTabData[3]}"/>
+    </LinearLayout>
+
+</LinearLayout>
+</layout>
