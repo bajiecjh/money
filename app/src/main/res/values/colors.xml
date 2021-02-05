@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
-
-    <color name="black_transfer">#80000000</color>
-    <color name="white">#ffffff</color>
+    <color name="black_283c43">#283c43</color>
+    <color name="black_55A68B">#4A9179</color>
+    <color name="black_80000000">#80000000</color>
     <color name="black_161616">#161616</color>
-    <color name="yellow_EAE02D">#EAE02D</color>
+    <color name="yellow_ffc750">#ffc750</color>
+    <color name="gray_8B8A8F">#8B8A8F</color>
+    <color name="gray_eeeeee">#eeeeee</color>
+    <color name="green_54cba3">#54cba3</color>
+    <color name="black_6E6B78">#6E6B78</color>
+    <color name="pink_FCBECF">#FCBECF</color>
+    <color name="yellow_faf6ee">#faf6ee</color>
 
-    <color name="font_color_black">#6E6B78</color>
-    <color name="font_color_yellow">#777103</color>
+    <color name="black_transfer">@color/black_80000000</color>
+    <color name="status_bar">@color/black_55A68B</color>
+    <color name="white">#ffffff</color>
+    <color name="tab_selected">@color/black_161616</color>
+    <color name="tab_unselected">@color/gray_8B8A8F</color>
+    <color name="bookkeeping_tab">@color/green_54cba3</color>
+    <color name="gray_backgroud">@color/gray_eeeeee</color>
+    <color name="font_color_black">@color/black_161616</color>
+    <color name="font_color_gray">@color/gray_8B8A8F</color>
+
+
+<!--    -->
+<!--    <color name="colorPrimary">#6200EE</color>-->
+<!--    <color name="colorAccent">#03DAC5</color>-->
+
+
+<!--    <color name="black_161616">#161616</color>-->
+<!--    <color name="yellow_EAE02D">#EAE02D</color>-->
+
+<!--    <color name="font_color_black">#6E6B78</color>-->
+<!--    <color name="font_color_yellow">#777103</color>-->
 
 </resources>

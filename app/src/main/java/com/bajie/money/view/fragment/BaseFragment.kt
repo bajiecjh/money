@@ -22,8 +22,12 @@ abstract class BaseFragment<T : ViewDataBinding>: Fragment {
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         mBinding = DataBindingUtil.inflate<T>(inflater, getLayout(), container, false);
-        init();
         return mBinding.root;
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        init();
     }
     public abstract fun getLayout(): Int;
     public abstract fun init();

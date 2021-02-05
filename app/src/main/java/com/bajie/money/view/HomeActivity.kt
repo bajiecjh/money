@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.R
 import com.bajie.money.databinding.ActivityHomeBinding
+import com.bajie.money.view.fragment.BaseFragment
+import com.bajie.money.view.fragment.BookkeepingFragment
 import com.bajie.money.view.fragment.HomeFragment
 import com.bajie.money.viewmodel.HomeViewmodel
 
@@ -17,7 +19,7 @@ import com.bajie.money.viewmodel.HomeViewmodel
 class HomeActivity: BaseActivity<ActivityHomeBinding>(), View.OnClickListener {
 
     private lateinit var fragment1: HomeFragment;
-    private lateinit var fragment2: HomeFragment;
+    private lateinit var fragment2: BookkeepingFragment;
     private lateinit var fragment3: HomeFragment;
     private lateinit var fragment4: HomeFragment;
 
@@ -37,7 +39,6 @@ class HomeActivity: BaseActivity<ActivityHomeBinding>(), View.OnClickListener {
         mBinding.tab4.setOnClickListener(this);
     }
 
-
     private fun showFragment1() {
         if(!::fragment1.isInitialized) {
             fragment1 = HomeFragment("1");
@@ -51,11 +52,11 @@ class HomeActivity: BaseActivity<ActivityHomeBinding>(), View.OnClickListener {
     }
     private fun showFragment2() {
         if(!::fragment2.isInitialized) {
-            fragment2 = HomeFragment("2");
+            fragment2 = BookkeepingFragment();
         } else if(fragment2 == null) {
-            fragment2 = supportFragmentManager.findFragmentByTag(fragment2.javaClass.name) as HomeFragment;
+            fragment2 = supportFragmentManager.findFragmentByTag(fragment2.javaClass.name) as BookkeepingFragment;
             if(fragment2 == null) {
-                fragment2 = HomeFragment("2");
+                fragment2 = BookkeepingFragment();
             }
         }
         showFragment(fragment2);

@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@{data.title}"
-        android:textColor="@{data.isSelected ? @color/font_color_yellow : @color/font_color_black}"
+        android:textColor="@{data.isSelected ? @color/tab_selected : @color/tab_unselected}"
         android:textSize="12sp"
         app:layout_constraintTop_toBottomOf="@id/icon"
         app:layout_constraintLeft_toLeftOf="parent"
