@@ -11,8 +11,17 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "categories")
 class Category {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 1;
+    var id: Int = 0;
     var name: String = "";
-    var parentId: Int = 0;
-    var isCommonly: Boolean = false;
+    var parentId: Int = -1;
+    var commonly: Int = 0;
+
+    fun copy(): Category {
+        val category = Category();
+        category.id = id;
+        category.name = name;
+        category.parentId = parentId;
+        category.commonly = commonly;
+        return category;
+    }
 }

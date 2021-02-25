@@ -82,9 +82,11 @@ dependencies {
 
 
     //room (local)
-    implementation 'android.arch.persistence.room:runtime:1.0.0'
-    implementation 'android.arch.persistence.room:rxjava2:1.0.0'
-    kapt 'android.arch.persistence.room:compiler:1.0.0'
+    def room_version = "2.2.0-alpha02"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version" // For Java use annotationProcessor instead of kapt
+    implementation "androidx.room:room-rxjava2:$room_version"
+    testImplementation "androidx.room:room-testing:$room_version"
 //facebook出品，可在Chrome中查看数据库
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-beta01'

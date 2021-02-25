@@ -3,21 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
+        <import type="android.view.View"/>
         <variable
             name="category"
             type="com.bajie.money.model.data.Category" />
-        <variable
-            name="isSelected"
-            type="Boolean" />
         <variable
             name="isAddItem"
             type="Boolean" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    tools:context=".view.DataBindingActivity"
-    android:background="@{isSelected ? @color/white : @color/gray_backgroud}">
+    android:layout_height="50dp"
+    tools:context=".view.DataBindingActivity">
 
     <TextView
         android:id="@+id/name"
@@ -26,15 +23,31 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:text="@{category.name}"
         android:textSize="16dp"
         android:gravity="center"
         android:textColor="@color/font_color_black"
         android:drawableLeft="@{isAddItem ? @drawable/icon_add : null}"
-        android:drawablePadding="10dp"/>
+        android:drawablePadding="5dp"
+        android:layout_marginLeft="15dp"/>
 
+    <ImageView
+        android:id="@+id/star"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:padding="15dp"
+        android:src="@{category.commonly == 1 ? @drawable/icon_star_solid : @drawable/icon_star_hollow}"
+        android:visibility="@{isAddItem ? View.GONE : View.VISIBLE}"/>
 
-
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/gray_eeeeee"
+        android:visibility="@{isAddItem ? View.GONE : View.VISIBLE}"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
