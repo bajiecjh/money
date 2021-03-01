@@ -6,7 +6,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -87,6 +87,7 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
         override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
             val data = mDataList[position];
             holder.binding.setVariable(BR.category, data);
+            holder.binding.setVariable(BR.isFirstItem, position == 0);
             holder.itemView.setOnClickListener{
                 if(position == itemCount - 1) {
                     AddCategoryActivity.start(context as Activity, -1, ADD_CATEGORY_CODE)
@@ -109,4 +110,17 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
     }
 }
 
-
+@BindingAdapter("android:layout_marginRight")
+public fun setRightMargin(view: View, rightMar: Float) {
+    val layoutParams: ViewGroup.MarginLayoutParams =
+        view.layoutParams as ViewGroup.MarginLayoutParams;
+    layoutParams.rightMargin = rightMar.toInt();
+    view.layoutParams = layoutParams;
+}
+@BindingAdapter("android:layout_marginLeft")
+public fun setLeftMargin(view: View, leftMar: Float) {
+    val layoutParams: ViewGroup.MarginLayoutParams =
+        view.layoutParams as ViewGroup.MarginLayoutParams;
+    layoutParams.leftMargin = leftMar.toInt();
+    view.layoutParams = layoutParams;
+}

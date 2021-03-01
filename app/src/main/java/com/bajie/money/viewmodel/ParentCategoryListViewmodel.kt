@@ -4,15 +4,12 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bajie.money.R
 import com.bajie.money.model.dao.CategoryDao
-import com.bajie.money.model.data.BottomTabData
 import com.bajie.money.model.data.Category
 import com.bajie.money.model.loacal.AppDatabase
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 
 /**
