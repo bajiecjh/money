@@ -14,11 +14,15 @@ import com.bajie.money.viewmodel.ViewModelFactory
  * bajie on 2021/2/5 18:01
 
  */
-class AddCategoryActivity: BaseActivity<ActivityAddCategoryBinding>(), View.OnClickListener {
+class EditCategoryActivity: BaseActivity<ActivityAddCategoryBinding>(), View.OnClickListener {
     companion object {
+        const val TYPE_
+        const val PARENT_ID = "parentId"
+
+
         fun start(context: Activity, parentId: Int, requestCode: Int) {
-            val intent = Intent(context, AddCategoryActivity::class.java);
-            intent.putExtra("parentId", parentId);
+            val intent = Intent(context, EditCategoryActivity::class.java);
+            intent.putExtra(PARENT_ID, parentId);
             context.startActivityForResult(intent, requestCode);
         }
     }

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,12 +23,12 @@ import com.bajie.money.viewmodel.ParentCategoryListViewmodel
  * bajie on 2021/2/20 18:03
 
  */
-class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding>(),
+class EditParentCategoryActivity: BaseActivity<ActivityParentCategoryListBinding>(),
     View.OnClickListener {
     companion object {
         const val ADD_CATEGORY_CODE = 100;
         fun start(context: Activity) {
-            val intent = Intent(context, ParentCategoryListActivity::class.java);
+            val intent = Intent(context, EditParentCategoryActivity::class.java);
             context.startActivity(intent);
         }
     }
@@ -110,17 +109,3 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
     }
 }
 
-@BindingAdapter("android:layout_marginRight")
-public fun setRightMargin(view: View, rightMar: Float) {
-    val layoutParams: ViewGroup.MarginLayoutParams =
-        view.layoutParams as ViewGroup.MarginLayoutParams;
-    layoutParams.rightMargin = rightMar.toInt();
-    view.layoutParams = layoutParams;
-}
-@BindingAdapter("android:layout_marginLeft")
-public fun setLeftMargin(view: View, leftMar: Float) {
-    val layoutParams: ViewGroup.MarginLayoutParams =
-        view.layoutParams as ViewGroup.MarginLayoutParams;
-    layoutParams.leftMargin = leftMar.toInt();
-    view.layoutParams = layoutParams;
-}

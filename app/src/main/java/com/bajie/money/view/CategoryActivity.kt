@@ -133,7 +133,7 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
                 run {
                     // 点击添加
                     if(position == mViewModel.childList.size-1) {
-                        AddCategoryActivity.start(this@CategoryActivity, mViewModel.getCurrentParentId(), CategoryActivity.ADD_CHILD_CODE);
+                        EditCategoryActivity.start(this@CategoryActivity, mViewModel.getCurrentParentId(), CategoryActivity.ADD_CHILD_CODE);
                     }
                 }
             }
@@ -167,7 +167,7 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
                 run {
                     // 点击添加
                     if(position == mDataList.size-1) {
-                        AddCategoryActivity.start(this@CategoryActivity, -1, CategoryActivity.ADD_CATEGORY_CODE);
+                        EditCategoryActivity.start(this@CategoryActivity, -1, CategoryActivity.ADD_CATEGORY_CODE);
                     }else if(position != mViewModel.currentSelected) {
                         mViewModel.currentSelected = position
                         notifyDataSetChanged();
