@@ -27,6 +27,9 @@ interface CategoryDao {
     @Query("SELECT * FROM categories WHERE commonly = 1")
     fun getCommonlyList(): Single<List<Category>>;
 
+    @Query("SELECT * FROM categories WHERE id = :id")
+    fun getCategoryById(id: Int): Single<Category>;
+
     @Query("SELECT * FROM categories WHERE :whereCase")
     fun query(whereCase: String): Single<List<Category>>
 

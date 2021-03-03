@@ -28,6 +28,7 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
     View.OnClickListener {
     companion object {
         const val ADD_CATEGORY_CODE = 100;
+        const val EDIT_CATEGORY_CODE = 101;
         fun start(context: Activity) {
             val intent = Intent(context, ParentCategoryListActivity::class.java);
             context.startActivity(intent);
@@ -90,7 +91,9 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
             holder.binding.setVariable(BR.isFirstItem, position == 0);
             holder.itemView.setOnClickListener{
                 if(position == itemCount - 1) {
-                    EditCategoryActivity.start(context as Activity, -1, ADD_CATEGORY_CODE)
+                    EditCategoryActivity.startAddParent(context as Activity, ADD_CATEGORY_CODE);
+                } else {
+                    EditCategoryActivity.startEditParent(context as Activity, EDIT_CATEGORY_CODE, data.id);
                 }
             }
         }

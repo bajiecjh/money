@@ -89,7 +89,7 @@ class EditParentCategoryActivity: BaseActivity<ActivityParentCategoryListBinding
             holder.binding.setVariable(BR.isFirstItem, position == 0);
             holder.itemView.setOnClickListener{
                 if(position == itemCount - 1) {
-                    EditCategoryActivity.start(context as Activity, -1, ADD_CATEGORY_CODE)
+                    EditCategoryActivity.startAddParent(context as Activity, ADD_CATEGORY_CODE)
                 }
             }
         }
