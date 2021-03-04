@@ -4,15 +4,14 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bajie.money.R
 import com.bajie.money.model.dao.CategoryDao
-import com.bajie.money.model.data.BottomTabData
 import com.bajie.money.model.data.Category
 import com.bajie.money.model.loacal.AppDatabase
 import com.bajie.money.view.EditCategoryActivity
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Function
+import io.reactivex.functions.Action
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -25,6 +24,7 @@ class EditCategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
         const val TYPE_CREATE_CHILD: Int = 0;
         const val TYPE_CREATE_PARENT = 1;
         const val TYPE_EDIT_PARENT = 3;
+        const val TYPE_EDIT_CHILD = 4;
     }
     var type = 0;
     val title = MutableLiveData<String>("支出列别");
@@ -65,6 +65,16 @@ class EditCategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
                         }
                     }
             }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        } else if(type == TYPE_EDIT_CHILD) {
+
+            return Completable.fromSingle(
+                local.getCategoryById(category.value!!.id)
+                    .map {
+                        category.value = it;
+                        category;
+                    }
+            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+
         }
         return Completable.complete();
     }
@@ -79,6 +89,19 @@ class EditCategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
                 childList.add(category);
                 childList;
             };
+    }
+
+    fun deleteParent() : Completable {
+        return Completable.create{emitter ->
+            local.deleteParent(category.value!!.id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe (Action {
+                    // 父类删除成功之后就返回，不用管子类删除成功与否
+                    emitter.onComplete();
+                    local.deleteChildByParentId(category.value!!.id).subscribeOn(Schedulers.io());
+                }, Consumer<Throwable>{
+                    emitter.onError(Throwable("删除失败"));
+                })
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
 
@@ -99,6 +122,18 @@ class EditCategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
 
     fun isEditParent(): Boolean {
         return type == TYPE_EDIT_PARENT;
+    }
+
+    fun isEditChild(): Boolean {
+        return type == TYPE_EDIT_CHILD;
+    }
+
+    fun isAdd(): Boolean {
+        return type == TYPE_CREATE_CHILD || type == TYPE_CREATE_PARENT;
+    }
+
+    fun getChildId(position: Int): Int {
+        return childList[position].id;
     }
 }
 

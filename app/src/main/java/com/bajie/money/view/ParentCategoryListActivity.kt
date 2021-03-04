@@ -54,8 +54,10 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == ADD_CATEGORY_CODE && resultCode == Activity.RESULT_OK) {
-            refreshiList();
+        if(resultCode == Activity.RESULT_OK) {
+            when(requestCode) {
+                ADD_CATEGORY_CODE, EDIT_CATEGORY_CODE -> refreshiList();
+            }
         }
     }
 

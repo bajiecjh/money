@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,10 +25,11 @@ import io.reactivex.functions.Consumer
  * bajie on 2021/2/5 18:01
 
  */
-class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.OnClickListener {
+class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.OnClickListener, DialogListener {
 
     companion object {
         const val REQUEST_CODE_ADD_CHILD_CATEGORY = 100;
+        const val REQUEST_CODE_EDIT_CHILD_CATEGORY = 101;
         const val PARAMS = "params";
         const val TYPE = "type";
         const val PARENT_ID = "parentId";
@@ -55,6 +57,15 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
             val intent = Intent(context, EditCategoryActivity::class.java);
             val params = HashMap<String, Int>();
             params[TYPE] = EditCategoryViewmodel.TYPE_EDIT_PARENT;
+            params[ID] = id;
+            intent.putExtra(PARAMS, params);
+            context.startActivityForResult(intent, requestCode);
+        }
+
+        fun startEditChild(context: Activity, requestCode: Int, id: Int) {
+            val intent = Intent(context, EditCategoryActivity::class.java);
+            val params = HashMap<String, Int>();
+            params[TYPE] = EditCategoryViewmodel.TYPE_EDIT_CHILD;
             params[ID] = id;
             intent.putExtra(PARAMS, params);
             context.startActivityForResult(intent, requestCode);
@@ -87,6 +98,8 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
                         mBinding.childList.layoutManager = LinearLayoutManager(this);
                         mChildAdapter = ChildListAdapter();
                         mBinding.childList.adapter = mChildAdapter;
+                    } else if(mViewModel.isEditChild()) {
+                        mBinding.editText.setSelection(mViewModel.getNameLength());
                     }
 
                 },
@@ -95,27 +108,50 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
 
 
         mBinding.title.back.setOnClickListener(this);
-//        mBinding.save1.setOnClickListener(this);
+        mBinding.save1.setOnClickListener(this);
+        mBinding.save.setOnClickListener(this);
+        mBinding.delete.setOnClickListener(this);
+        mBinding.delete1.setOnClickListener(this);
+
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.back -> finish();
-//            R.id.save1 -> {
-//                if(mBinding.editText.text.isEmpty()) {
-//                    showToast("类别名称不能为空");
-//                    return;
-//                }
-//                mViewModel.addCategory(mBinding.editText.text.toString())
-//                    .subscribe {
-//                        showToast("添加成功");
-//                        val intent = Intent();
-//                        setResult(Activity.RESULT_OK, intent);
-//                        finish();
-//                    }
-//            }
+            R.id.save1, R.id.save -> {
+                if(mBinding.editText.text.isEmpty()) {
+                    showToast("类别名称不能为空");
+                    return;
+                }
+                mViewModel.addCategory(mBinding.editText.text.toString())
+                    .subscribe {
+                        val msg = if(mViewModel.isAdd()) "添加成功" else "修改成功";
+                        showToast(msg);
+                        val intent = Intent();
+                        setResult(Activity.RESULT_OK, intent);
+                        finish();
+                    }
+            };
+            R.id.delete, R.id.delete1 -> {
+                val dialog = BaseDialog(this)
+                    .setMessage("确定删除该大类？").show(supportFragmentManager, "delete");
+
+            }
         }
     }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        mViewModel.deleteParent().subscribe ( Action {
+            showToast("删除成功");
+            val intent = Intent();
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        }, Consumer<Throwable> {
+            showToast(it.message!!);
+        } );
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {}
 
     class ChildListViewHolder(val binding: ItemParentCategoryBinding): RecyclerView.ViewHolder(binding.root){}
 
@@ -135,6 +171,8 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
             holder.itemView.setOnClickListener {
                 if(position == mViewModel.childList.size - 1) {
                     startCreateChild(this@EditCategoryActivity, REQUEST_CODE_ADD_CHILD_CATEGORY, mViewModel.getCategoryId());
+                } else {
+                    startEditChild(this@EditCategoryActivity, REQUEST_CODE_EDIT_CHILD_CATEGORY, mViewModel.getChildId(position));
                 }
             }
         }
