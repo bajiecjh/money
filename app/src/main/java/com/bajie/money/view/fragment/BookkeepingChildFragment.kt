@@ -1,15 +1,12 @@
 package com.bajie.money.view.fragment
 
-import android.os.Bundle
+import android.app.Activity
 import android.view.View
-import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bajie.money.R
-import com.bajie.money.databinding.FragmentBookkeepingBinding
 import com.bajie.money.databinding.FragmentBookkeepingChildBinding
-import com.bajie.money.viewmodel.BookkeepingViewmodel
+import com.bajie.money.view.CategoryActivity
+import com.bajie.money.viewmodel.BookkeepingChildViewmodel
 
 /**
 
@@ -17,8 +14,9 @@ import com.bajie.money.viewmodel.BookkeepingViewmodel
 
  */
 class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>(), View.OnClickListener {
+    private lateinit var mViewModel: BookkeepingChildViewmodel;
+
     companion object {
-        val PARAMS = "params";
     }
 
     override fun getLayout(): Int {
@@ -26,15 +24,16 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
     }
 
     override fun init() {
-        arguments?.takeIf { it.containsKey(PARAMS) }?.apply {
-            mBinding.text = getInt(PARAMS).toString();
-        }
+        mViewModel = ViewModelProvider(this, BookkeepingChildViewmodel.ViewModelFactory(context!!)).get(BookkeepingChildViewmodel::class.java);
+        mBinding.vm = mViewModel;
+
+        mBinding.category.setOnClickListener(this);
 
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
-
+            R.id.category -> CategoryActivity.start((context as Activity?)!!);
         }
     }
 }

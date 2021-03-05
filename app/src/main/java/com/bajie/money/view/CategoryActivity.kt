@@ -30,6 +30,11 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
     companion object {
         const val ADD_CATEGORY_CODE = 100;
         const val ADD_CHILD_CODE = 101;
+
+        fun start(activity: Activity) {
+            val intent = Intent(activity, CategoryActivity::class.java);
+            activity.startActivity(intent);
+        }
     }
 
     private lateinit var mViewModel: CategoryViewmodel;
@@ -57,6 +62,7 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
         refreshParentList();
 
         mBinding.header.rightBtn.setOnClickListener(this);
+        mBinding.header.back.setOnClickListener(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -95,9 +101,8 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
 
     override fun onClick(v: View) {
         when(v?.id) {
-            R.id.right_btn -> {
-                ParentCategoryListActivity.start(this);
-            }
+            R.id.right_btn -> ParentCategoryListActivity.start(this);
+            R.id.back -> finish();
         }
     }
 

@@ -8,6 +8,7 @@
     <color name="yellow_ffc750">#ffc750</color>
     <color name="gray_8B8A8F">#8B8A8F</color>
     <color name="gray_eeeeee">#eeeeee</color>
+    <color name="gray_fafafa">#fafafa</color>
     <color name="green_54cba3">#54cba3</color>
     <color name="black_6E6B78">#6E6B78</color>
     <color name="pink_FCBECF">#FCBECF</color>
@@ -18,8 +19,8 @@
     <color name="white">#ffffff</color>
     <color name="tab_selected">@color/black_161616</color>
     <color name="tab_unselected">@color/gray_8B8A8F</color>
-    <color name="bookkeeping_tab">@color/green_54cba3</color>
-    <color name="gray_backgroud">@color/gray_eeeeee</color>
+    <color name="bookkeeping_tab">@color/white</color>
+    <color name="gray_backgroud">@color/gray_fafafa</color>
     <color name="font_color_black">@color/black_161616</color>
     <color name="font_color_gray">@color/gray_8B8A8F</color>
 

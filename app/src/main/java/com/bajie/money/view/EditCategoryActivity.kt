@@ -79,7 +79,7 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_ADD_CHILD_CATEGORY) {
+        if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_ADD_CHILD_CATEGORY || requestCode == REQUEST_CODE_EDIT_CHILD_CATEGORY) {
             mViewModel.getChildList().subscribe { list, err ->
                 list?.run { mChildAdapter.notifyDataSetChanged(); }
                 err?.run { err.message?.let { showToast(it) } }
@@ -133,15 +133,16 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
                     }
             };
             R.id.delete, R.id.delete1 -> {
-                val dialog = BaseDialog(this)
-                    .setMessage("确定删除该大类？").show(supportFragmentManager, "delete");
+                val msg = if(mViewModel.isEditParent()) "确定删除该大类？" else "确定删除该小类？";
+                BaseDialog(this)
+                    .setMessage(msg).show(supportFragmentManager, "delete");
 
             }
         }
     }
 
     override fun onDialogPositiveClick(dialog: DialogFragment) {
-        mViewModel.deleteParent().subscribe ( Action {
+        mViewModel.deleteItem()?.subscribe ( Action {
             showToast("删除成功");
             val intent = Intent();
             setResult(Activity.RESULT_OK, intent);

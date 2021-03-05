@@ -9,7 +9,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bajie.money.R
 import com.bajie.money.databinding.FragmentBookkeepingBinding
-import com.bajie.money.databinding.FragmentBookkeepingChildBinding
+import com.bajie.money.viewmodel.BookkeepingChildViewmodel
 import com.bajie.money.viewmodel.BookkeepingViewmodel
 
 /**
@@ -58,7 +58,7 @@ class MyAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
     override fun createFragment(position: Int): Fragment {
         val fragment = BookkeepingChildFragment().apply {
             arguments = Bundle().apply {
-                putInt(BookkeepingChildFragment.PARAMS, position);
+                putInt(BookkeepingChildViewmodel.POSITION, position);
             }
         };
         return fragment;

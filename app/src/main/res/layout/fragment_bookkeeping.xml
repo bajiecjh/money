@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/tab"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:background="@color/bookkeeping_tab"
         app:layout_constraintTop_toTopOf="parent">
@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@{vm.tabData[0].title}"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="14sp"
             android:clickable="true"
             app:layout_constraintTop_toTopOf="parent"
@@ -58,7 +58,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@{vm.tabData[1].title}"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="14sp"
             android:clickable="true"
             app:layout_constraintTop_toTopOf="parent"

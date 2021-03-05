@@ -34,11 +34,10 @@ interface CategoryDao {
     fun query(whereCase: String): Single<List<Category>>
 
     @Query("DELETE FROM categories WHERE id = :id")
-    fun deleteParent(id: Int): Completable
+    fun deleteById(id: Int): Completable
 
     @Query("DELETE FROM categories WHERE parentId = :parentId")
     fun deleteChildByParentId(parentId: Int): Completable
-
 
 
 

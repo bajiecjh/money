@@ -1,12 +1,9 @@
 package com.bajie.money.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.model.dao.CategoryDao
 import com.bajie.money.model.data.Category
-import com.bajie.money.model.loacal.AppDatabase
 import com.bajie.money.view.EditCategoryActivity
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -41,6 +38,7 @@ class EditCategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
             TYPE_CREATE_CHILD -> title.value = "添加支出小类";
             TYPE_CREATE_PARENT -> title.value = "添加支出大类";
             TYPE_EDIT_PARENT -> title.value = "编辑支出大类";
+            TYPE_EDIT_CHILD -> title.value = "编辑支出小类";
         }
         params[EditCategoryActivity.PARENT_ID]?.run { category.value?.parentId =this; }
         params[EditCategoryActivity.ID]?.run { category.value?.id = this}
@@ -68,7 +66,7 @@ class EditCategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
         } else if(type == TYPE_EDIT_CHILD) {
 
             return Completable.fromSingle(
-                local.getCategoryById(category.value!!.id)
+                local.getCategoryById(category.value!!.id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .map {
                         category.value = it;
                         category;
@@ -91,9 +89,21 @@ class EditCategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
             };
     }
 
+    fun deleteItem(): Completable? {
+        when(type) {
+            TYPE_EDIT_CHILD -> return deleteChild();
+            TYPE_EDIT_PARENT -> return deleteParent();
+        }
+        return null;
+    }
+
+    fun deleteChild(): Completable {
+        return local.deleteById(category.value!!.id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun deleteParent() : Completable {
         return Completable.create{emitter ->
-            local.deleteParent(category.value!!.id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            local.deleteById(category.value!!.id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe (Action {
                     // 父类删除成功之后就返回，不用管子类删除成功与否
                     emitter.onComplete();
@@ -137,10 +147,10 @@ class EditCategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
     }
 }
 
-class ViewModelFactory(private val application: Application): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        val local = AppDatabase.getInstance(application).categoryDao();
-        return modelClass.getConstructor(CategoryDao::class.java).newInstance(local);
-    }
-
-}
+//class ViewModelFactory(private val application: Application): ViewModelProvider.Factory {
+//    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//        val local = AppDatabase.getInstance(application).categoryDao();
+//        return modelClass.getConstructor(CategoryDao::class.java).newInstance(local);
+//    }
+//
+//}

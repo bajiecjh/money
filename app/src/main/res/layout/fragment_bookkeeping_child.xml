@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="text"
-            type="String" />
+            name="vm"
+            type="com.bajie.money.viewmodel.BookkeepingChildViewmodel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.MainActivity"
-    android:padding="10dp">
+    android:padding="20dp"
+    android:background="@color/gray_backgroud">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
