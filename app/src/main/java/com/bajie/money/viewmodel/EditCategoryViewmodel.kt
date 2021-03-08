@@ -78,7 +78,7 @@ class EditCategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
     }
 
     fun getChildList(): Single<List<Category>> {
-        return local.getChildList(getCategoryId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        return local.getChildListByParentId(getCategoryId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .map {
                 childList.clear();
                 childList.addAll(it);

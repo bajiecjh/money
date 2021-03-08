@@ -6,15 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.R
 import com.bajie.money.model.dao.CategoryDao
-import com.bajie.money.model.data.BottomTabData
 import com.bajie.money.model.data.Category
 import com.bajie.money.model.loacal.AppDatabase
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
-import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -73,7 +70,7 @@ class CategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
             return getCommonlyList();
         }
         val parentId = parentList.get(currentSelected).id;
-        return local.getChildList(parentId)
+        return local.getChildListByParentId(parentId)
             .map { list ->
                 childList.clear();
                 childList.addAll(list);

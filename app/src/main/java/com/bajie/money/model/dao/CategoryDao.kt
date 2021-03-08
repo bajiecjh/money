@@ -22,13 +22,20 @@ interface CategoryDao {
     fun getList(): Single<List<Category>>;
 
     @Query("SELECT * FROM categories WHERE parentId = :parentId")
-    fun getChildList(parentId: Int): Single<List<Category>>;
+    fun getChildListByParentId(parentId: Int): Single<List<Category>>;
+
+    @Query("SELECT * FROM categories WHERE parentId != -1")
+    fun getChildList(): Single<List<Category>>;
+
 
     @Query("SELECT * FROM categories WHERE commonly = 1")
     fun getCommonlyList(): Single<List<Category>>;
 
     @Query("SELECT * FROM categories WHERE id = :id")
     fun getCategoryById(id: Int): Single<Category>;
+
+    @Query("SELECT * FROM categories WHERE name = :name")
+    fun getCategoryByName(name: String): Single<Category>;
 
     @Query("SELECT * FROM categories WHERE :whereCase")
     fun query(whereCase: String): Single<List<Category>>
@@ -38,6 +45,7 @@ interface CategoryDao {
 
     @Query("DELETE FROM categories WHERE parentId = :parentId")
     fun deleteChildByParentId(parentId: Int): Completable
+
 
 
 

@@ -23,6 +23,7 @@ open abstract class BaseActivity<T : ViewDataBinding>: AppCompatActivity() {
 //        window.setFlags(Window.FEATURE_NO_TITLE, Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         mBinding.lifecycleOwner = this
+//        mBinding.setVariable(BR.vm, )
         init();
     }
 
