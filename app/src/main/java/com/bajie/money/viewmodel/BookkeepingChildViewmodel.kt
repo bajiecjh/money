@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.model.dao.CategoryDao
+import com.bajie.money.model.data.Category
 import com.bajie.money.model.loacal.AppDatabase
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,19 +24,22 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
         const val POSITION = "position";
     }
 
-    fun getDefaultCategory(): Single<String> {
-        return Single.create { emitter ->
-            getDefaultFood().subscribe { name, _ ->
-                if(name != null) {
-                    emitter.onSuccess(name)
-                } else {
-                    getFirstCommonly().subscribe { name, _ ->
-                        if(name != null) {
-                            emitter.onSuccess(name);
-                        } else {
-                            getFirstChild().subscribe{name, _ ->
-                                if (name != null) {
-                                    emitter.onSuccess(name);
+    fun getDefaultCategory(): Single<Category> {
+        return Single.create{emitter ->
+            // 先获取食物类型
+            getDefaultFood().subscribe { t1: Category?, _ ->
+                if(t1 != null) {
+                    emitter.onSuccess(t1);
+                } else {    // 获取常用类型第一个
+                    getFirstCommonly().subscribe { t1: Category?, _ ->
+                        if(t1 != null) {
+                            emitter.onSuccess(t1);
+                        } else {    // 获取小类第一个
+                            getFirstChild().subscribe { t1, t2 ->
+                                if(t1 != null) {
+                                    emitter.onSuccess(t1)
+                                } else {
+                                    emitter.onError(Throwable("No category"));
                                 }
                             }
                         }
@@ -45,12 +49,12 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
         }
     }
 
-    private fun getFirstCommonly(): Single<String> {
+    private fun getFirstCommonly(): Single<Category> {
         return local.getCommonlyList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map {
-                it[0].name;
+                it[0];
             }
 
     }
@@ -59,16 +63,16 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
 
     }
 
-    private fun getFirstChild(): Single<String> {
+    private fun getFirstChild(): Single<Category> {
         return local.getChildList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map {
-                it[0].name;
+                it[0];
             }
     }
 
-    private fun getDefaultFood(): Single<String> {
+    private fun getDefaultFood(): Single<Category> {
         val calender = Calendar.getInstance();
         val hour = calender.get(Calendar.HOUR_OF_DAY);
         var default = ""
@@ -85,9 +89,6 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
         return local.getCategoryByName(default)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .map {
-                it.name;
-            }
     }
 
     class ViewModelFactory(private val context: Context): ViewModelProvider.Factory {

@@ -33,13 +33,14 @@
             android:layout_height="wrap_content"
             android:textColor="@color/font_color_black"
             android:textStyle="bold"
-            android:text="晚餐"
+            android:text=""
             android:textSize="16sp"
             android:layout_marginLeft="15dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/icon"/>
         <TextView
+            android:id="@+id/commonly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="设为常用"

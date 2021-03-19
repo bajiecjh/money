@@ -7,6 +7,8 @@ import com.bajie.money.R
 import com.bajie.money.databinding.FragmentBookkeepingChildBinding
 import com.bajie.money.view.CategoryActivity
 import com.bajie.money.viewmodel.BookkeepingChildViewmodel
+import com.bajie.money.viewmodel.ViewModelFactory
+import kotlinx.android.synthetic.main.fragment_bookkeeping_child.view.*
 
 /**
 
@@ -24,8 +26,15 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
     }
 
     override fun init() {
-        mViewModel = ViewModelProvider(this, BookkeepingChildViewmodel.ViewModelFactory(context!!)).get(BookkeepingChildViewmodel::class.java);
+        mViewModel = ViewModelProvider(this, ViewModelFactory(activity?.application!!)).get(BookkeepingChildViewmodel::class.java);
         mBinding.vm = mViewModel;
+
+        mViewModel.getDefaultCategory().subscribe { category, err ->
+            category?.let {
+                mBinding.typeName.text = category.name;
+                mBinding.commonly.visibility = if(category.commonly == 1) View.GONE else View.VISIBLE;
+            }
+        }
 
         mBinding.category.setOnClickListener(this);
 

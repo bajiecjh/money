@@ -19,8 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:background="@color/bookkeeping_tab"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@drawable/bookkeeping_tab_bg"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
 
         <TextView
             android:id="@+id/expenditure"
@@ -28,14 +31,17 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@{vm.tabData[0].title}"
-            android:textColor="@color/black"
+            android:textColor="@{vm.tabData[0].isSelected ? @color/white : @color/font_color_black}"
             android:textSize="14sp"
             android:clickable="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/income"
-            app:layout_constraintHorizontal_weight="1"/>
+            app:layout_constraintHorizontal_weight="1"
+            android:layout_margin="5dp"
+
+            android:background="@{vm.tabData[0].isSelected ? @drawable/bookkeeping_tab_selected_bg : null}"/>
         <Space
             android:id="@+id/space"
             android:layout_width="0dp"
@@ -43,14 +49,14 @@
             app:layout_constraintTop_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginTop="2dp"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_tab_triangle"
-            android:visibility="@{vm.tabData[0].isSelected ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toTopOf="@id/space"
-            app:layout_constraintLeft_toLeftOf="@id/expenditure"
-            app:layout_constraintRight_toRightOf="@id/expenditure" />
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/icon_tab_triangle"-->
+<!--            android:visibility="@{vm.tabData[0].isSelected ? View.VISIBLE : View.GONE}"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/space"-->
+<!--            app:layout_constraintLeft_toLeftOf="@id/expenditure"-->
+<!--            app:layout_constraintRight_toRightOf="@id/expenditure" />-->
 
         <TextView
             android:id="@+id/income"
@@ -58,23 +64,25 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@{vm.tabData[1].title}"
-            android:textColor="@color/black"
+            android:textColor="@{vm.tabData[1].isSelected ? @color/white : @color/font_color_black}"
             android:textSize="14sp"
             android:clickable="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/expenditure"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintHorizontal_weight="1"/>
+            app:layout_constraintHorizontal_weight="1"
+            android:layout_margin="5dp"
+            android:background="@{vm.tabData[1].isSelected ? @drawable/bookkeeping_tab_selected_bg : null}"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_tab_triangle"
-            android:visibility="@{vm.tabData[1].isSelected ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toTopOf="@id/space"
-            app:layout_constraintLeft_toLeftOf="@id/income"
-            app:layout_constraintRight_toRightOf="@id/income"/>
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/icon_tab_triangle"-->
+<!--            android:visibility="@{vm.tabData[1].isSelected ? View.VISIBLE : View.GONE}"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/space"-->
+<!--            app:layout_constraintLeft_toLeftOf="@id/income"-->
+<!--            app:layout_constraintRight_toRightOf="@id/income"/>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

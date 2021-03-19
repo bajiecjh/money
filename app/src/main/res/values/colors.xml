@@ -13,6 +13,7 @@
     <color name="black_6E6B78">#6E6B78</color>
     <color name="pink_FCBECF">#FCBECF</color>
     <color name="yellow_faf6ee">#faf6ee</color>
+    <color name="gray_f1f1f3">#f1f1f3</color>
 
     <color name="black_transfer">@color/black_80000000</color>
     <color name="status_bar">@color/black_55A68B</color>
