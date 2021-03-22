@@ -15,8 +15,10 @@
     <color name="yellow_faf6ee">#faf6ee</color>
     <color name="gray_f1f1f3">#f1f1f3</color>
 
+
+
+    <color name="status_bar">@color/white</color>
     <color name="black_transfer">@color/black_80000000</color>
-    <color name="status_bar">@color/black_55A68B</color>
     <color name="white">#ffffff</color>
     <color name="tab_selected">@color/black_161616</color>
     <color name="tab_unselected">@color/gray_8B8A8F</color>

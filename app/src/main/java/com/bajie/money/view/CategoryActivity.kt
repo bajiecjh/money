@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ import com.bajie.money.databinding.ItemCategoryChildBinding
 import com.bajie.money.databinding.ItemCategoryParentBinding
 import com.bajie.money.model.data.Category
 import com.bajie.money.viewmodel.CategoryViewmodel
+import com.bajie.money.viewmodel.EditCategoryViewmodel
 import com.bajie.money.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_category.view.*
 
@@ -31,6 +33,14 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
         const val ADD_CATEGORY_CODE = 100;
         const val ADD_CHILD_CODE = 101;
 
+        fun startForResult(activity: Activity, requestCode: Int) {
+            val intent = Intent(activity, CategoryActivity::class.java);
+            activity.startActivityForResult(intent, requestCode);
+        }
+        fun startForResult(fragment: Fragment, requestCode: Int) {
+            val intent = Intent(fragment.context, CategoryActivity::class.java);
+            fragment.startActivityForResult(intent, requestCode);
+        }
         fun start(activity: Activity) {
             val intent = Intent(activity, CategoryActivity::class.java);
             activity.startActivity(intent);
@@ -102,7 +112,12 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
     override fun onClick(v: View) {
         when(v?.id) {
             R.id.right_btn -> ParentCategoryListActivity.start(this);
-            R.id.back -> finish();
+            R.id.back -> {
+                val intent = Intent();
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+
         }
     }
 

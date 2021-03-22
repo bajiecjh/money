@@ -1,6 +1,7 @@
 package com.bajie.money.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.model.dao.CategoryDao
@@ -19,26 +20,52 @@ import java.util.*
 class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel() {
     // 0 支出，1收入
     var position = 0;
+    val category = MutableLiveData<Category>(null);
 
     companion object {
         const val POSITION = "position";
     }
 
-    fun getDefaultCategory(): Single<Category> {
+    fun getDefaultCategory() {
+        getDefaultFood().subscribe { t1: Category?, _ ->
+            if(t1 != null) {
+                category.value = t1;
+            } else {    // 获取常用类型第一个
+                getFirstCommonly().subscribe { t1: Category?, _ ->
+                    if(t1 != null) {
+                        category.value = t1;
+                    } else {    // 获取小类第一个
+                        getFirstChild().subscribe { t1, t2 ->
+                            if(t1 != null) {
+                                category.value = t1;
+                            } else {
+                                category.value = null;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    fun getDefaultCategory1(): Single<Category> {
         return Single.create{emitter ->
             // 先获取食物类型
             getDefaultFood().subscribe { t1: Category?, _ ->
                 if(t1 != null) {
+                    category.value = t1;
                     emitter.onSuccess(t1);
                 } else {    // 获取常用类型第一个
                     getFirstCommonly().subscribe { t1: Category?, _ ->
                         if(t1 != null) {
+                            category.value = t1;
                             emitter.onSuccess(t1);
                         } else {    // 获取小类第一个
                             getFirstChild().subscribe { t1, t2 ->
                                 if(t1 != null) {
+                                    category.value = t1;
                                     emitter.onSuccess(t1)
                                 } else {
+                                    category.value = null;
                                     emitter.onError(Throwable("No category"));
                                 }
                             }
