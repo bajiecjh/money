@@ -15,8 +15,8 @@ import com.bajie.money.R
 import com.bajie.money.databinding.ActivityParentCategoryListBinding
 import com.bajie.money.databinding.ItemParentCategoryBinding
 import com.bajie.money.model.data.Category
-import com.bajie.money.viewmodel.ParentCategoryListVMFactory
 import com.bajie.money.viewmodel.ParentCategoryListViewmodel
+import com.bajie.money.viewmodel.ViewModelFactory
 
 /**
 
@@ -40,7 +40,7 @@ class EditParentCategoryActivity: BaseActivity<ActivityParentCategoryListBinding
     }
 
     override fun init() {
-        mViewModel = ViewModelProvider(this, ParentCategoryListVMFactory(application)).get(ParentCategoryListViewmodel::class.java);
+        mViewModel = ViewModelProvider(this, ViewModelFactory(application)).get(ParentCategoryListViewmodel::class.java);
         mBinding.vm = mViewModel;
         mBinding.list.layoutManager = LinearLayoutManager(this);
         mAdapter = ListAdapter(this);

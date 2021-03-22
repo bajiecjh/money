@@ -90,11 +90,4 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-
-    class ViewModelFactory(private val context: Context): ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            val local = AppDatabase.getInstance(context).categoryDao();
-            return modelClass.getConstructor(CategoryDao::class.java).newInstance(local);
-        }
-    }
 }

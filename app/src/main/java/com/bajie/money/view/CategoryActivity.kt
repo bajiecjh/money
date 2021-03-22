@@ -17,8 +17,8 @@ import com.bajie.money.databinding.ActivityCategoryBinding
 import com.bajie.money.databinding.ItemCategoryChildBinding
 import com.bajie.money.databinding.ItemCategoryParentBinding
 import com.bajie.money.model.data.Category
-import com.bajie.money.viewmodel.CategoryViewModelFactory
 import com.bajie.money.viewmodel.CategoryViewmodel
+import com.bajie.money.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_category.view.*
 
 /**
@@ -49,7 +49,7 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
     override fun init() {
         mLayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
 
-        mViewModel = ViewModelProvider(this, CategoryViewModelFactory(application)).get(CategoryViewmodel::class.java);
+        mViewModel = ViewModelProvider(this, ViewModelFactory(application)).get(CategoryViewmodel::class.java);
         mBinding.vm = mViewModel;
 
         mBinding.parentList.layoutManager = LinearLayoutManager(this);

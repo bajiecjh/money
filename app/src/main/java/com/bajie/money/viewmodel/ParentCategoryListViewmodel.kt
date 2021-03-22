@@ -46,11 +46,3 @@ class ParentCategoryListViewmodel constructor(val local: CategoryDao) : ViewMode
 
     }
 }
-
-class ParentCategoryListVMFactory(private val application: Application): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        val local = AppDatabase.getInstance(application).categoryDao();
-        return modelClass.getConstructor(CategoryDao::class.java).newInstance(local);
-    }
-
-}

@@ -161,12 +161,3 @@ class CategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
 
 
 }
-
-
-class CategoryViewModelFactory(private val application: Application): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        val local = AppDatabase.getInstance(application).categoryDao();
-        return modelClass.getConstructor(CategoryDao::class.java).newInstance(local);
-    }
-
-}
