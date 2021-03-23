@@ -93,18 +93,32 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--        android:background="@drawable/price_edit_bg"-->
-        <EditText
-            android:layout_width="100dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/edit_text"
             android:textColor="#f9b70a"
-            android:text="0.0"
+            android:text="￥"
             android:textSize="30dp"
             android:textStyle="bold"
             android:gravity="center"
             android:inputType="numberDecimal"
             android:background="@null"/>
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:textColor="#f9b70a"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:background="@null"
+            android:focusableInTouchMode="true"
+            android:focusable="true"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/no_commonly"
