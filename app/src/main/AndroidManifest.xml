@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.HomeActivity">
+        <activity android:name=".view.activity.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,8 +18,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.CategoryActivity"/>
-        <activity android:name=".view.EditCategoryActivity"/>
+        <activity android:name=".view.activity.CategoryActivity"/>
+        <activity android:name=".view.activity.EditCategoryActivity"/>
         <activity android:name=".view.ParentCategoryListActivity"/>
     </application>
 

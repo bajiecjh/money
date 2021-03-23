@@ -1,4 +1,4 @@
-package com.bajie.money.view
+package com.bajie.money.view.widget
 
 import android.app.Activity
 import android.app.Dialog

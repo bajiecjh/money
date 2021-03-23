@@ -3,16 +3,17 @@
     android:shape="rectangle">
   <!-- rectangle表示为矩形 -->
 
-<!--   填充的颜色-->
-<!--    <solid android:color="@color/bookkeeping_tab" />-->
-<solid android:color="#dfe2eb" />
+  <!-- 填充的颜色 -->
+  <solid android:color="#f9b70a" />
+
   <!-- 边框的颜色和粗细 -->
 <!--  <stroke-->
 <!--      android:width="1dp"-->
-<!--      android:color="@color/black" />-->
+<!--      android:color="#f9b70a"-->
+<!--      />-->
 
-  <!--   android:radius 圆角的半径-->
+  <!-- android:radius 圆角的半径 -->
   <corners
-      android:radius="25dp"
+      android:radius="5dp"
       />
 </shape>

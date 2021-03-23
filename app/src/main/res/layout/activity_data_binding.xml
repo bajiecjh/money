@@ -8,7 +8,7 @@
             type="com.bajie.money.model.data.DataBindingData" />
         <variable
             name="presenter"
-            type="com.bajie.money.view.DataBindingActivity.Presenter" />
+            type="com.bajie.money.view.activity.DataBindingActivity.Presenter" />
         <import type="android.view.View"/>
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout

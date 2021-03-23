@@ -1,4 +1,4 @@
-package com.bajie.money.view
+package com.bajie.money.view.activity
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -128,8 +128,18 @@ class RxJavaTestActivity: AppCompatActivity() {
         val course = ArrayList<String>();
         course.add("数学");
         course.add("语文");
-        students.add(Student("test", course));
-        students.add(Student("test2", course));
+        students.add(
+            Student(
+                "test",
+                course
+            )
+        );
+        students.add(
+            Student(
+                "test2",
+                course
+            )
+        );
 
 
         val subscriber = object :Consumer<String> {

@@ -11,6 +11,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
 
@@ -21,11 +22,28 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
     // 0 支出，1收入
     var position = 0;
     val category = MutableLiveData<Category>(null);
+    val commonlyList: MutableLiveData<ArrayList<Category>> by lazy {
+        MutableLiveData<ArrayList<Category>>();
+    };
 
     companion object {
         const val POSITION = "position";
     }
 
+    fun init() {
+        getDefaultCategory();
+        getCommonlyList();
+    }
+
+    fun setNewCategory(newCategory: Category?) {
+        category.value = newCategory;
+    }
+    fun getCommonlyItem(position: Int): Category? {
+        commonlyList.value?.let {
+            return it[position];
+        }
+        return null;
+    }
     fun getDefaultCategory() {
         getDefaultFood().subscribe { t1: Category?, _ ->
             if(t1 != null) {
@@ -47,6 +65,16 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
             }
         }
     }
+
+    fun getCommonlyList() {
+        local.getCommonlyList().subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { list, _ ->
+                commonlyList.value= list as ArrayList<Category>?;
+            }
+
+    }
+
     fun getDefaultCategory1(): Single<Category> {
         return Single.create{emitter ->
             // 先获取食物类型
@@ -86,8 +114,11 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
 
     }
 
-    fun isCommonly() {
-
+    fun getCommonlyListSize(): Int {
+        this.commonlyList.value?.let {
+            return it.size;
+        };
+        return 0;
     }
 
     private fun getFirstChild(): Single<Category> {
@@ -116,5 +147,9 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
         return local.getCategoryByName(default)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    public fun isSame(position: Int): Boolean {
+        return category.value?.id == commonlyList.value!![position].id;
     }
 }

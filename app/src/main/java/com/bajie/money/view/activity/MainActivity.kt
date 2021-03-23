@@ -1,4 +1,4 @@
-package com.bajie.money.view
+package com.bajie.money.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

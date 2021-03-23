@@ -1,4 +1,4 @@
-package com.bajie.money.view
+package com.bajie.money.view.activity
 
 import android.content.pm.ActivityInfo
 import android.os.Build

@@ -1,4 +1,4 @@
-package com.bajie.money.view
+package com.bajie.money.view.activity
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable

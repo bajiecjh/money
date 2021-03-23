@@ -1,4 +1,4 @@
-package com.bajie.money.view
+package com.bajie.money.view.activity
 
 import android.app.Activity
 import android.content.Context
@@ -19,7 +19,6 @@ import com.bajie.money.databinding.ItemCategoryChildBinding
 import com.bajie.money.databinding.ItemCategoryParentBinding
 import com.bajie.money.model.data.Category
 import com.bajie.money.viewmodel.CategoryViewmodel
-import com.bajie.money.viewmodel.EditCategoryViewmodel
 import com.bajie.money.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_category.view.*
 
@@ -111,7 +110,9 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
 
     override fun onClick(v: View) {
         when(v?.id) {
-            R.id.right_btn -> ParentCategoryListActivity.start(this);
+            R.id.right_btn -> ParentCategoryListActivity.start(
+                this
+            );
             R.id.back -> {
                 val intent = Intent();
                 setResult(Activity.RESULT_OK, intent);
@@ -129,7 +130,9 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChildListViewHolder {
             val binding: ItemCategoryChildBinding = DataBindingUtil.inflate(mLayoutInflater, R.layout.item_category_child, parent, false);
-            return ChildListViewHolder(binding);
+            return ChildListViewHolder(
+                binding
+            );
         }
 
         override fun getItemCount(): Int {
@@ -153,7 +156,16 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
                 run {
                     // 点击添加
                     if(position == mViewModel.childList.size-1) {
-                        EditCategoryActivity.startCreateChild(this@CategoryActivity, ADD_CHILD_CODE, mViewModel.getCurrentParentId());
+                        EditCategoryActivity.startCreateChild(
+                            this@CategoryActivity,
+                            ADD_CHILD_CODE,
+                            mViewModel.getCurrentParentId()
+                        );
+                    } else {
+                        val intent = Intent();
+                        intent.putExtra("category", mViewModel.childList[position])
+                        setResult(Activity.RESULT_OK, intent);
+                        finish()
                     }
                 }
             }
@@ -170,14 +182,16 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
         }
         override fun onCreateViewHolder( parent: ViewGroup, viewType: Int ): ParentListViewHolder {
             val binding: ItemCategoryParentBinding = DataBindingUtil.inflate(mLayoutInflater, R.layout.item_category_parent, parent,false);
-            return ParentListViewHolder(binding);
+            return ParentListViewHolder(
+                binding
+            );
         }
 
         override fun getItemCount(): Int {
             return mDataList.size;
         }
 
-        override fun onBindViewHolder( holder: ParentListViewHolder, position: Int ) {
+        override fun onBindViewHolder(holder: ParentListViewHolder, position: Int ) {
             val data = mDataList[position];
             holder.binding.setVariable(BR.category, data);
             holder.binding.setVariable(BR.isSelected, position == mViewModel.currentSelected);
@@ -187,7 +201,10 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
                 run {
                     // 点击添加
                     if(position == mDataList.size-1) {
-                        EditCategoryActivity.startAddParent(this@CategoryActivity, CategoryActivity.ADD_CATEGORY_CODE);
+                        EditCategoryActivity.startAddParent(
+                            this@CategoryActivity,
+                            ADD_CATEGORY_CODE
+                        );
                     }else if(position != mViewModel.currentSelected) {
                         mViewModel.currentSelected = position
                         notifyDataSetChanged();

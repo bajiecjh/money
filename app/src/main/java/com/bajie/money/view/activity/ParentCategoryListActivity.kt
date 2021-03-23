@@ -1,4 +1,4 @@
-package com.bajie.money.view
+package com.bajie.money.view.activity
 
 import android.app.Activity
 import android.content.Context
@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,8 @@ import com.bajie.money.R
 import com.bajie.money.databinding.ActivityParentCategoryListBinding
 import com.bajie.money.databinding.ItemParentCategoryBinding
 import com.bajie.money.model.data.Category
+import com.bajie.money.view.activity.BaseActivity
+import com.bajie.money.view.activity.EditCategoryActivity
 import com.bajie.money.viewmodel.ParentCategoryListViewmodel
 import com.bajie.money.viewmodel.ViewModelFactory
 
@@ -23,12 +26,13 @@ import com.bajie.money.viewmodel.ViewModelFactory
  * bajie on 2021/2/20 18:03
 
  */
-class EditParentCategoryActivity: BaseActivity<ActivityParentCategoryListBinding>(),
+class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding>(),
     View.OnClickListener {
     companion object {
         const val ADD_CATEGORY_CODE = 100;
+        const val EDIT_CATEGORY_CODE = 101;
         fun start(context: Activity) {
-            val intent = Intent(context, EditParentCategoryActivity::class.java);
+            val intent = Intent(context, ParentCategoryListActivity::class.java);
             context.startActivity(intent);
         }
     }
@@ -52,8 +56,10 @@ class EditParentCategoryActivity: BaseActivity<ActivityParentCategoryListBinding
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == ADD_CATEGORY_CODE && resultCode == Activity.RESULT_OK) {
-            refreshiList();
+        if(resultCode == Activity.RESULT_OK) {
+            when(requestCode) {
+                ADD_CATEGORY_CODE, EDIT_CATEGORY_CODE -> refreshiList();
+            }
         }
     }
 
@@ -89,7 +95,9 @@ class EditParentCategoryActivity: BaseActivity<ActivityParentCategoryListBinding
             holder.binding.setVariable(BR.isFirstItem, position == 0);
             holder.itemView.setOnClickListener{
                 if(position == itemCount - 1) {
-                    EditCategoryActivity.startAddParent(context as Activity, ADD_CATEGORY_CODE)
+                    EditCategoryActivity.startAddParent(context as Activity, ADD_CATEGORY_CODE);
+                } else {
+                    EditCategoryActivity.startEditParent(context as Activity, EDIT_CATEGORY_CODE, data.id);
                 }
             }
         }
@@ -109,3 +117,17 @@ class EditParentCategoryActivity: BaseActivity<ActivityParentCategoryListBinding
     }
 }
 
+@BindingAdapter("android:layout_marginRight")
+public fun setRightMargin(view: View, rightMar: Float) {
+    val layoutParams: ViewGroup.MarginLayoutParams =
+        view.layoutParams as ViewGroup.MarginLayoutParams;
+    layoutParams.rightMargin = rightMar.toInt();
+    view.layoutParams = layoutParams;
+}
+@BindingAdapter("android:layout_marginLeft")
+public fun setLeftMargin(view: View, leftMar: Float) {
+    val layoutParams: ViewGroup.MarginLayoutParams =
+        view.layoutParams as ViewGroup.MarginLayoutParams;
+    layoutParams.leftMargin = leftMar.toInt();
+    view.layoutParams = layoutParams;
+}

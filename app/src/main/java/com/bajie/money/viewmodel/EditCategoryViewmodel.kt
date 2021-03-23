@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bajie.money.model.dao.CategoryDao
 import com.bajie.money.model.data.Category
-import com.bajie.money.view.EditCategoryActivity
+import com.bajie.money.view.activity.EditCategoryActivity
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Action

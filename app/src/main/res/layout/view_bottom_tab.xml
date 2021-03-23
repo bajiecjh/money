@@ -14,7 +14,7 @@
     android:id="@+id/tab_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".view.MainActivity">
+    tools:context=".view.activity.MainActivity">
 
     <ImageView
         android:id="@+id/icon"

@@ -1,13 +1,11 @@
-package com.bajie.money.view
+package com.bajie.money.view.activity
 
 
-import android.content.Intent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.R
 import com.bajie.money.databinding.ActivityHomeBinding
-import com.bajie.money.view.fragment.BaseFragment
 import com.bajie.money.view.fragment.BookkeepingFragment
 import com.bajie.money.view.fragment.HomeFragment
 import com.bajie.money.viewmodel.HomeViewmodel

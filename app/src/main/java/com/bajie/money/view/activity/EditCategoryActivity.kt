@@ -1,4 +1,4 @@
-package com.bajie.money.view
+package com.bajie.money.view.activity
 
 import android.app.Activity
 import android.content.Context
@@ -15,6 +15,8 @@ import com.bajie.money.BR
 import com.bajie.money.R
 import com.bajie.money.databinding.ActivityEditCategoryBinding
 import com.bajie.money.databinding.ItemParentCategoryBinding
+import com.bajie.money.view.widget.BaseDialog
+import com.bajie.money.view.widget.DialogListener
 import com.bajie.money.viewmodel.EditCategoryViewmodel
 import com.bajie.money.viewmodel.ViewModelFactory
 import io.reactivex.functions.Action
@@ -25,7 +27,8 @@ import io.reactivex.functions.Consumer
  * bajie on 2021/2/5 18:01
 
  */
-class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.OnClickListener, DialogListener {
+class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.OnClickListener,
+    DialogListener {
 
     companion object {
         const val REQUEST_CODE_ADD_CHILD_CATEGORY = 100;
@@ -159,7 +162,9 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
     inner class ChildListAdapter(): RecyclerView.Adapter<ChildListViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChildListViewHolder {
             val binding: ItemParentCategoryBinding = DataBindingUtil.inflate(getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, R.layout.item_parent_category,parent, false);
-            return ChildListViewHolder(binding);
+            return ChildListViewHolder(
+                binding
+            );
         }
 
         override fun getItemCount(): Int {
@@ -171,9 +176,17 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
             holder.binding.setVariable(BR.category, data);
             holder.itemView.setOnClickListener {
                 if(position == mViewModel.childList.size - 1) {
-                    startCreateChild(this@EditCategoryActivity, REQUEST_CODE_ADD_CHILD_CATEGORY, mViewModel.getCategoryId());
+                    startCreateChild(
+                        this@EditCategoryActivity,
+                        REQUEST_CODE_ADD_CHILD_CATEGORY,
+                        mViewModel.getCategoryId()
+                    );
                 } else {
-                    startEditChild(this@EditCategoryActivity, REQUEST_CODE_EDIT_CHILD_CATEGORY, mViewModel.getChildId(position));
+                    startEditChild(
+                        this@EditCategoryActivity,
+                        REQUEST_CODE_EDIT_CHILD_CATEGORY,
+                        mViewModel.getChildId(position)
+                    );
                 }
             }
         }

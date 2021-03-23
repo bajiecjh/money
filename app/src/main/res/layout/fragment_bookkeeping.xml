@@ -12,7 +12,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
+    tools:context=".view.activity.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/tab"
@@ -40,7 +40,6 @@
             app:layout_constraintRight_toLeftOf="@id/income"
             app:layout_constraintHorizontal_weight="1"
             android:layout_margin="5dp"
-
             android:background="@{vm.tabData[0].isSelected ? @drawable/bookkeeping_tab_selected_bg : null}"/>
         <Space
             android:id="@+id/space"
