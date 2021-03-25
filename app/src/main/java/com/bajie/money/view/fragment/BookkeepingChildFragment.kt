@@ -12,11 +12,14 @@ import com.bajie.money.R
 import com.bajie.money.databinding.FragmentBookkeepingChildBinding
 import com.bajie.money.databinding.ItemCommonlyBinding
 import com.bajie.money.model.data.Category
+import com.bajie.money.utils.SoftInputUtil
 import com.bajie.money.view.BaseRecyclerViewAdapter
 import com.bajie.money.view.BaseViewHolder
 import com.bajie.money.view.activity.CategoryActivity
 import com.bajie.money.viewmodel.BookkeepingChildViewmodel
-import com.bajie.money.viewmodel.ViewModelFactory
+import com.bajie.money.viewmodel.ViewModelFactoryWCategoryRecord
+import io.reactivex.functions.Action
+import io.reactivex.functions.Consumer
 
 /**
 
@@ -36,8 +39,9 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
     override fun getLayout(): Int {
         return R.layout.fragment_bookkeeping_child;
     }
+
     override fun init() {
-        mViewModel = ViewModelProvider(this, ViewModelFactory(activity?.application!!)).get(BookkeepingChildViewmodel::class.java);
+        mViewModel = ViewModelProvider(this, ViewModelFactoryWCategoryRecord(activity?.application!!)).get(BookkeepingChildViewmodel::class.java);
         mBinding.vm = mViewModel;
 
         mViewModel.init();
@@ -45,22 +49,27 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
             Observer<Category> { t ->
                 if(t != null) {
                     mBinding.category.setOnClickListener(this@BookkeepingChildFragment);
+                    mBinding.more.setOnClickListener(this);
+                    mBinding.setAsCommonly.setOnClickListener(this);
+                    mBinding.editText.requestFocus();
+                    mBinding.save.setOnClickListener(this);
+//                    mBinding.saveReedit.setOnClickListener(this);
+                    SoftInputUtil.showSoftInput(mBinding.editText);
                 } else {
                     mBinding.noCategory.setOnClickListener(this@BookkeepingChildFragment);
                 }
             })
         mViewModel.commonlyList.observe(this,
             Observer<ArrayList<Category>> { t ->
-                if(t!!.isEmpty()) {
+                if(t == null || t.isEmpty()) {
                     mBinding.noCommonly.setOnClickListener(this@BookkeepingChildFragment);
                 } else {
                     mBinding.commonlyList.layoutManager = GridLayoutManager(context, 4);
                     mBinding.commonlyList.adapter = mCommonlyAdapter;
                 }
+
             })
     }
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -78,7 +87,25 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.category,R.id.noCategory, R.id.no_commonly -> CategoryActivity.startForResult(this, REQUEST_CODE_EDIT_CATEGORY);
+            R.id.category,R.id.noCategory, R.id.no_commonly, R.id.more -> CategoryActivity.startForResult(this, REQUEST_CODE_EDIT_CATEGORY);
+            R.id.set_as_commonly -> mViewModel.setCategoryAsCommonly();
+            R.id.save -> {
+                val price = mBinding.editText.text.toString()
+                if(price.isEmpty()) {
+                    showToast("请输入一个有效金额");
+                    return
+                }
+                mViewModel.addRecord(price.toFloat(), mBinding.hint.text.toString())
+                    .subscribe(
+                        Action {
+                            showToast("添加成功")
+                            mBinding.editText.setText("");
+                            mBinding.hint.setText("");
+                        },
+                        Consumer<Throwable> { showToast("添加失败")})
+
+
+            }
         }
     }
 

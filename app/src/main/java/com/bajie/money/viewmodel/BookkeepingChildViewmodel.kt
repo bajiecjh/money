@@ -1,12 +1,12 @@
 package com.bajie.money.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.model.dao.CategoryDao
+import com.bajie.money.model.dao.RecordDao
 import com.bajie.money.model.data.Category
-import com.bajie.money.model.loacal.AppDatabase
+import com.bajie.money.model.data.Record
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -18,7 +18,7 @@ import kotlin.collections.ArrayList
  * bajie on 2021/1/4 16:04
 
  */
-class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel() {
+class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDao: RecordDao) : ViewModel() {
     // 0 支出，1收入
     var position = 0;
     val category = MutableLiveData<Category>(null);
@@ -28,6 +28,20 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
 
     companion object {
         const val POSITION = "position";
+    }
+
+    fun setCategoryAsCommonly() {
+        category.value?.let {
+            it.commonly = 1;
+            category.value = it;
+            local.add(it!!)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    this.commonlyList.value!!.add(category.value!!);
+                    this.commonlyList.value = this.commonlyList.value;
+                }
+        }
     }
 
     fun init() {
@@ -73,6 +87,13 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao) : ViewModel(
                 commonlyList.value= list as ArrayList<Category>?;
             }
 
+    }
+
+    fun addRecord(price:Float, hint:String): Completable {
+        val record = Record(price, category.value!!.id, hint);
+        return recordDao.add(record)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread());
     }
 
     fun getDefaultCategory1(): Single<Category> {
