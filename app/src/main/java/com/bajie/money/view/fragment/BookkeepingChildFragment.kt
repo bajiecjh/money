@@ -16,6 +16,7 @@ import com.bajie.money.utils.SoftInputUtil
 import com.bajie.money.view.BaseRecyclerViewAdapter
 import com.bajie.money.view.BaseViewHolder
 import com.bajie.money.view.activity.CategoryActivity
+import com.bajie.money.view.activity.TimePickerActivity
 import com.bajie.money.viewmodel.BookkeepingChildViewmodel
 import com.bajie.money.viewmodel.ViewModelFactoryWCategoryRecord
 import io.reactivex.functions.Action
@@ -53,6 +54,7 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
                     mBinding.setAsCommonly.setOnClickListener(this);
                     mBinding.editText.requestFocus();
                     mBinding.save.setOnClickListener(this);
+                    mBinding.time.setOnClickListener(this);
 //                    mBinding.saveReedit.setOnClickListener(this);
                     SoftInputUtil.showSoftInput(mBinding.editText);
                 } else {
@@ -103,9 +105,8 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
                             mBinding.hint.setText("");
                         },
                         Consumer<Throwable> { showToast("添加失败")})
-
-
-            }
+            };
+            R.id.time -> TimePickerActivity.start(activity!!);
         }
     }
 

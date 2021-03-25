@@ -22,6 +22,7 @@
         <activity android:name=".view.activity.CategoryActivity"/>
         <activity android:name=".view.activity.EditCategoryActivity"/>
         <activity android:name=".view.ParentCategoryListActivity"/>
+        <activity android:name=".view.activity.TimePickerActivity"/>
     </application>
 
 </manifest>
