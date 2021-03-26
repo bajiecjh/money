@@ -25,7 +25,7 @@ class TimeUtils {
         }
         // 时间转时间戳
         fun dateToStamp(time: String): String {
-            val simpleDateFormat = SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+            val simpleDateFormat = SimpleDateFormat();
             val date = simpleDateFormat.parse(time);
             val ts = date.time;
             return ts.toString();
@@ -35,6 +35,19 @@ class TimeUtils {
             var dateFormat = SimpleDateFormat(pattern);
             val times = dateFormat.format(Date(stamp));
             return times;
+        }
+        fun stringToDate(str: String, pattern: String): Date {
+            var dateFormat = SimpleDateFormat(pattern);
+            val date = dateFormat.parse(str);
+            return date;
+        }
+        // 获取年月日时分
+        fun getFiveParams(dateStr: String): FiveParams<Int, Int, Int, Int, Int> {
+            var dateFormat = SimpleDateFormat();
+            val date = dateFormat.parse(dateStr);
+            val calendar = Calendar.getInstance();
+            calendar.time = date;
+            return FiveParams(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
         }
     }
 }

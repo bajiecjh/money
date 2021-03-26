@@ -1,15 +1,18 @@
 package com.bajie.money.view.activity
 
 
+import android.app.Activity
 import android.content.Intent
 import android.view.Gravity
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.R
 import com.bajie.money.databinding.ActivityTimePickerBinding
+import com.bajie.money.utils.TimeUtils
 import com.bajie.money.viewmodel.TimePickerViewModel
 
 /**
@@ -17,17 +20,29 @@ import com.bajie.money.viewmodel.TimePickerViewModel
  * bajie on 2021/3/25 14:38
 
  */
-class TimePickerActivity: BaseActivity<ActivityTimePickerBinding, TimePickerViewModel>() {
+class TimePickerActivity: BaseActivity<ActivityTimePickerBinding, TimePickerViewModel>(), View.OnClickListener {
     companion object {
-        fun start(activity: FragmentActivity) {
-            val intent = Intent(activity, TimePickerActivity::class.java);
-            activity.startActivity(intent);
+        fun startForResult(fragment: Fragment, requestCode: Int, data: String) {
+            val intent = Intent(fragment.context, TimePickerActivity::class.java);
+            intent.putExtra("data", data);
+            fragment.startActivityForResult(intent, requestCode);
         }
     }
 
     override fun init() {
         mBinding.timePicker.setIs24HourView(true);
         setPickerSize();
+        initPicker();
+        mBinding.header.rightBtn.setOnClickListener(this);
+        mBinding.header.back.setOnClickListener(this);
+    }
+
+    private fun initPicker() {
+        var data = intent.getStringExtra("data");
+        val five = TimeUtils.getFiveParams(data);
+        mBinding.datePicker.init(five.a, five.b, five.c, null);
+        mBinding.timePicker.currentHour = five.d;
+        mBinding.timePicker.currentMinute = five.e;
     }
 
 
@@ -70,5 +85,20 @@ class TimePickerActivity: BaseActivity<ActivityTimePickerBinding, TimePickerView
 
     override fun getLayout(): Int {
         return R.layout.activity_time_picker;
+    }
+
+
+    override fun onClick(v: View?) {
+        when(v?.id) {
+            R.id.back -> finish();
+            R.id.right_btn -> {
+                val intent = Intent();
+                var time = mBinding.datePicker.year.toString()  + "/" + (mBinding.datePicker.month + 1) + "/" + mBinding.datePicker.dayOfMonth + " " +mBinding.timePicker.currentHour + ":" + mBinding.timePicker.currentMinute;
+                intent.putExtra("data", time)
+                setResult(Activity.RESULT_OK, intent);
+                println("bajietest" + mBinding.datePicker.month);
+                finish()
+            }
+        }
     }
 }

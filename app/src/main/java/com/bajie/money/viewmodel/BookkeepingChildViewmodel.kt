@@ -32,6 +32,10 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
         const val POSITION = "position";
     }
 
+    fun setRecordTime(time: String) {
+        recordTime.value = time;
+    }
+
     fun setCategoryAsCommonly() {
         category.value?.let {
             it.commonly = 1;

@@ -36,6 +36,7 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
 
     companion object {
         const val REQUEST_CODE_EDIT_CATEGORY = 100;
+        const val REQUEST_CODE_TIME_PICKER = 101;
     }
 
     override fun getLayout(): Int {
@@ -86,6 +87,8 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
                 mViewModel.getDefaultCategory();
             }
             mViewModel.getCommonlyList();
+        } else if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_TIME_PICKER) {
+            mViewModel.setRecordTime(data!!.getStringExtra("data"))
         }
     }
 
@@ -108,7 +111,7 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
                         },
                         Consumer<Throwable> { showToast("添加失败")})
             };
-            R.id.time -> TimePickerActivity.start(activity!!);
+            R.id.time -> TimePickerActivity.startForResult(this, REQUEST_CODE_TIME_PICKER, mViewModel.recordTime.value!!);
         }
     }
 
