@@ -16,22 +16,18 @@ import com.bajie.money.viewmodel.HomeViewmodel
  * bajie on 2021/1/19 17:20
 
  */
-class HomeActivity: BaseActivity<ActivityHomeBinding>(), View.OnClickListener {
+class HomeActivity: BaseActivity<ActivityHomeBinding, HomeViewmodel>(), View.OnClickListener {
 
     private lateinit var fragment1: HomeFragment;
     private lateinit var fragment2: BookkeepingFragment;
     private lateinit var fragment3: HomeFragment;
     private lateinit var fragment4: HomeFragment;
 
-    private lateinit var mViewModel: HomeViewmodel;
-
     override fun getLayout(): Int {
         return R.layout.activity_home;
     }
 
     override fun init() {
-        mViewModel = ViewModelProvider(this).get(HomeViewmodel::class.java);
-        mBinding.vm = mViewModel;
         showFragment1();
         mBinding.tab1.setOnClickListener(this);
         mBinding.tab2.setOnClickListener(this);
@@ -131,6 +127,10 @@ class HomeActivity: BaseActivity<ActivityHomeBinding>(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    override fun getViewModel(): HomeViewmodel {
+        return ViewModelProvider(this).get(HomeViewmodel::class.java);
     }
 
 

@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.activity_category.view.*
  * bajie on 2021/1/8 12:14
 
  */
-class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickListener {
+class CategoryActivity: BaseActivity<ActivityCategoryBinding, CategoryViewmodel>(), View.OnClickListener {
     companion object {
         const val ADD_CATEGORY_CODE = 100;
         const val ADD_CHILD_CODE = 101;
@@ -46,7 +46,7 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
         }
     }
 
-    private lateinit var mViewModel: CategoryViewmodel;
+//    private lateinit var mViewModel: CategoryViewmodel;
     private lateinit var mParentAdapter: ParentListAdapter;
     private lateinit var mChildAdapter: ChildListAdapter;
     private lateinit var mLayoutInflater: LayoutInflater;
@@ -58,8 +58,8 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
     override fun init() {
         mLayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
 
-        mViewModel = ViewModelProvider(this, ViewModelFactory(application)).get(CategoryViewmodel::class.java);
-        mBinding.vm = mViewModel;
+//        mViewModel = ViewModelProvider(this, ViewModelFactory(application)).get(CategoryViewmodel::class.java);
+//        mBinding.vm = mViewModel;
 
         mBinding.parentList.layoutManager = LinearLayoutManager(this);
         mBinding.childList.layoutManager = LinearLayoutManager(this);
@@ -219,6 +219,10 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding>(), View.OnClickLis
             mDataList.addAll(list);
             notifyDataSetChanged();
         }
+    }
+
+    override fun getViewModel(): CategoryViewmodel {
+        return ViewModelProvider(this, ViewModelFactory(application)).get(CategoryViewmodel::class.java);
     }
 }
 

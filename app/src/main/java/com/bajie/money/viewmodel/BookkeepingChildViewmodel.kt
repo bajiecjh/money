@@ -6,6 +6,7 @@ import com.bajie.money.model.dao.CategoryDao
 import com.bajie.money.model.dao.RecordDao
 import com.bajie.money.model.data.Category
 import com.bajie.money.model.data.Record
+import com.bajie.money.utils.TimeUtils
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,6 +26,7 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
     val commonlyList: MutableLiveData<ArrayList<Category>> by lazy {
         MutableLiveData<ArrayList<Category>>();
     };
+    var recordTime = MutableLiveData<String>();
 
     companion object {
         const val POSITION = "position";
@@ -45,6 +47,7 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
     }
 
     fun init() {
+        refreshRecordTime();
         getDefaultCategory();
         getCommonlyList();
     }
@@ -89,8 +92,12 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
 
     }
 
+    private fun refreshRecordTime() {
+        recordTime.value = TimeUtils.getNowTime("yyyy/MM/dd HH:mm")
+    }
     fun addRecord(price:Float, hint:String): Completable {
-        val record = Record(price, category.value!!.id, hint);
+        val record = Record(price, category.value!!.id, hint, TimeUtils.dateToStamp(recordTime.value!!));
+        refreshRecordTime();
         return recordDao.add(record)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread());

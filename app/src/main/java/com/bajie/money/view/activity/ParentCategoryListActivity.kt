@@ -26,7 +26,7 @@ import com.bajie.money.viewmodel.ViewModelFactory
  * bajie on 2021/2/20 18:03
 
  */
-class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding>(),
+class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding, ParentCategoryListViewmodel>(),
     View.OnClickListener {
     companion object {
         const val ADD_CATEGORY_CODE = 100;
@@ -36,7 +36,6 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
             context.startActivity(intent);
         }
     }
-    private lateinit var mViewModel: ParentCategoryListViewmodel;
     private lateinit var mAdapter: ListAdapter;
 
     override fun getLayout(): Int {
@@ -44,8 +43,6 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
     }
 
     override fun init() {
-        mViewModel = ViewModelProvider(this, ViewModelFactory(application)).get(ParentCategoryListViewmodel::class.java);
-        mBinding.vm = mViewModel;
         mBinding.list.layoutManager = LinearLayoutManager(this);
         mAdapter = ListAdapter(this);
         mBinding.list.adapter = mAdapter;
@@ -114,6 +111,10 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
         when(v?.id) {
             R.id.back -> finish();
         }
+    }
+
+    override fun getViewModel(): ParentCategoryListViewmodel {
+        return ViewModelProvider(this, ViewModelFactory(application)).get(ParentCategoryListViewmodel::class.java);
     }
 }
 

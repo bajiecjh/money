@@ -14,11 +14,13 @@ class Record {
     var id: Int = 0;
     var price: Float = 0.0f;
     var categoryId: Int = 0;
-    var hint: String = ""
+    var hint: String = "";
+    var time: String = "";
 
-    constructor(price:Float, categoryId:Int, hint:String) {
+    constructor(price:Float, categoryId:Int, hint:String, time: String) {
         this.price = price;
         this.categoryId = categoryId;
         this.hint = hint;
+        this.time = time;
     }
 }

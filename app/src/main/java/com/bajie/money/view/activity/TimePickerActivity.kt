@@ -7,28 +7,31 @@ import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.R
 import com.bajie.money.databinding.ActivityTimePickerBinding
+import com.bajie.money.viewmodel.TimePickerViewModel
 
 /**
 
  * bajie on 2021/3/25 14:38
 
  */
-class TimePickerActivity: BaseActivity<ActivityTimePickerBinding>() {
+class TimePickerActivity: BaseActivity<ActivityTimePickerBinding, TimePickerViewModel>() {
     companion object {
         fun start(activity: FragmentActivity) {
             val intent = Intent(activity, TimePickerActivity::class.java);
             activity.startActivity(intent);
         }
     }
-    override fun getLayout(): Int {
-        return R.layout.activity_time_picker;
-    }
 
     override fun init() {
         mBinding.timePicker.setIs24HourView(true);
+        setPickerSize();
+    }
 
+
+    private fun setPickerSize() {
         val dpContainer = mBinding.datePicker.getChildAt(0) as LinearLayout;
         val dpSpinner = dpContainer.getChildAt(0) as LinearLayout;
         for (i in 0..dpContainer.childCount) {
@@ -58,5 +61,14 @@ class TimePickerActivity: BaseActivity<ActivityTimePickerBinding>() {
             param.rightMargin = 30;
             numPicker.layoutParams = param;
         }
+    }
+
+
+    override fun getViewModel(): TimePickerViewModel {
+        return ViewModelProvider(this).get(TimePickerViewModel::class.java);
+    }
+
+    override fun getLayout(): Int {
+        return R.layout.activity_time_picker;
     }
 }

@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="title"
-            type="String" />
-        <variable
-            name="rightIcon"
-            type="int" />
+            name="vm"
+            type="com.bajie.money.viewmodel.TimePickerViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/top"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
-
+    android:layout_height="wrap_content">
+    <include
+        android:id="@+id/header"
+        layout="@layout/header_title"
+        bind:title="@{vm.title}"
+        bind:rightIcon="@{vm.rightIcon}"/>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/date_picker_content"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintRight_toLeftOf="@id/time_picker_content"
-        app:layout_constraintLeft_toLeftOf="parent">
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="20dp">
         <TextView
             android:id="@+id/year"
             android:layout_width="0dp"
@@ -67,11 +69,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/time_picker_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@id/date_picker_content"
         android:layout_width="wrap_content"
-        android:layout_height="200dp">
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp">
 
         <TextView
             android:id="@+id/hour"

@@ -232,8 +232,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_marginTop="10dp"
-            android:text="03-25 00:00"
             android:drawableLeft="@drawable/icon_lock"
+            android:text="@{vm.recordTime}"
             android:drawablePadding="5dp"/>
 
         <Button

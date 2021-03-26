@@ -13,6 +13,7 @@ import com.bajie.money.databinding.FragmentBookkeepingChildBinding
 import com.bajie.money.databinding.ItemCommonlyBinding
 import com.bajie.money.model.data.Category
 import com.bajie.money.utils.SoftInputUtil
+import com.bajie.money.utils.TimeUtils
 import com.bajie.money.view.BaseRecyclerViewAdapter
 import com.bajie.money.view.BaseViewHolder
 import com.bajie.money.view.activity.CategoryActivity
@@ -55,6 +56,7 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
                     mBinding.editText.requestFocus();
                     mBinding.save.setOnClickListener(this);
                     mBinding.time.setOnClickListener(this);
+//                    mBinding.time.text = TimeUtils.getNowTime("MM/dd HH:mm")
 //                    mBinding.saveReedit.setOnClickListener(this);
                     SoftInputUtil.showSoftInput(mBinding.editText);
                 } else {

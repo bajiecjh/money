@@ -27,7 +27,7 @@ import io.reactivex.functions.Consumer
  * bajie on 2021/2/5 18:01
 
  */
-class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.OnClickListener,
+class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding, EditCategoryViewmodel>(), View.OnClickListener,
     DialogListener {
 
     companion object {
@@ -74,7 +74,6 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
             context.startActivityForResult(intent, requestCode);
         }
     }
-    private lateinit var mViewModel: EditCategoryViewmodel;
     private lateinit var mChildAdapter: ChildListAdapter;
     override fun getLayout(): Int {
         return R.layout.activity_edit_category;
@@ -91,8 +90,6 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
     }
 
     override fun init() {
-        mViewModel = ViewModelProvider(this, ViewModelFactory(application)).get(EditCategoryViewmodel::class.java);
-        mBinding.vm = mViewModel;
         mViewModel.initData(intent.extras!!.getSerializable(PARAMS) as HashMap<String, Int>)
             .subscribe(
                 Action {
@@ -191,6 +188,10 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding>(), View.On
             }
         }
 
+    }
+
+    override fun getViewModel(): EditCategoryViewmodel {
+        return ViewModelProvider(this, ViewModelFactory(application)).get(EditCategoryViewmodel::class.java);
     }
 }
 
