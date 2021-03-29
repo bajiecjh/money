@@ -28,8 +28,7 @@ import io.reactivex.functions.Consumer
  * bajie on 2021/2/1 14:47
 
  */
-class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>(), View.OnClickListener {
-    private lateinit var mViewModel: BookkeepingChildViewmodel;
+class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding, BookkeepingChildViewmodel>(), View.OnClickListener {
     private val mCommonlyAdapter: CommonlyAdapter by lazy {
         CommonlyAdapter(this!!.context!!);
     }
@@ -44,8 +43,6 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
     }
 
     override fun init() {
-        mViewModel = ViewModelProvider(this, ViewModelFactoryWCategoryRecord(activity?.application!!)).get(BookkeepingChildViewmodel::class.java);
-        mBinding.vm = mViewModel;
 
         mViewModel.init();
         mViewModel.category.observe(this,
@@ -135,5 +132,9 @@ class BookkeepingChildFragment : BaseFragment<FragmentBookkeepingChildBinding>()
             }
         }
 
+    }
+
+    override fun getViewModel(): BookkeepingChildViewmodel {
+        return ViewModelProvider(this, ViewModelFactoryWCategoryRecord(activity?.application!!)).get(BookkeepingChildViewmodel::class.java);
     }
 }

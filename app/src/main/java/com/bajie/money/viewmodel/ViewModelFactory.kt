@@ -18,6 +18,12 @@ class ViewModelFactory(private val application: Application): ViewModelProvider.
         return modelClass.getConstructor(CategoryDao::class.java).newInstance(local);
     }
 }
+class ViewModelFactoryWRecord(private val application: Application): ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        val local = AppDatabase.getInstance(application).recordDao();
+        return modelClass.getConstructor(RecordDao::class.java).newInstance(local);
+    }
+}
 
 class ViewModelFactoryWCategoryRecord(private val application: Application): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

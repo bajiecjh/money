@@ -17,16 +17,14 @@ import com.bajie.money.viewmodel.BookkeepingViewmodel
  * bajie on 2021/2/1 14:47
 
  */
-class BookkeepingFragment : BaseFragment<FragmentBookkeepingBinding>(), View.OnClickListener {
-    private lateinit var mViewModel: BookkeepingViewmodel;
+class BookkeepingFragment : BaseFragment<FragmentBookkeepingBinding, BookkeepingViewmodel>(), View.OnClickListener {
+//    private lateinit var mViewModel: BookkeepingViewmodel;
     override fun getLayout(): Int {
         return R.layout.fragment_bookkeeping;
     }
 
     override fun init() {
         mBinding.pager.adapter = MyAdapter(this);
-        mViewModel = ViewModelProvider(this).get(BookkeepingViewmodel::class.java);
-        mBinding.vm = mViewModel;
         activity!!.findViewById<TextView>(R.id.income).setOnClickListener(this);
         mBinding.expenditure.setOnClickListener{ scrollToPage(0)};
         mBinding.income.setOnClickListener{scrollToPage(1)};
@@ -48,6 +46,10 @@ class BookkeepingFragment : BaseFragment<FragmentBookkeepingBinding>(), View.OnC
             mBinding.pager.currentItem = toPage;
         }
     }
+
+    override fun getViewModel(): BookkeepingViewmodel {
+        return ViewModelProvider(this).get(BookkeepingViewmodel::class.java);
+    }
 }
 
 class MyAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
@@ -57,7 +59,7 @@ class MyAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
 
     override fun createFragment(position: Int): Fragment {
         val fragment = BookkeepingChildFragment().apply {
-            arguments = Bundle().apply {
+            val arguments = Bundle().apply {
                 putInt(BookkeepingChildViewmodel.POSITION, position);
             }
         };
