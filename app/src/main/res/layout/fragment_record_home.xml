@@ -35,7 +35,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="20dp"
         android:textStyle="bold"
-        android:text="200.29"/>
+        android:text="@{String.valueOf(vm.monthSpending)}"/>
 
     <TextView
         android:id="@+id/in"
@@ -139,8 +139,17 @@
         android:layout_height="0dp"
         app:layout_constraintVertical_weight="1"
         app:layout_constraintTop_toBottomOf="@id/filter"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/arrow"
         android:layout_marginTop="20dp"/>
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/list"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/icon_arrow_top"
+        android:rotation="90"/>
 
 
 

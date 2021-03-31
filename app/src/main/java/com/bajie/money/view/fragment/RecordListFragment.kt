@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.R
 import com.bajie.money.databinding.FragmentRecordHomeBinding
 import com.bajie.money.viewmodel.RecordHomeViewmodel
+import com.bajie.money.viewmodel.ViewModelFactoryWRecord
+
 /**
 
  * bajie on 2021/3/29 15:43
@@ -18,6 +20,6 @@ class RecordListFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeView
     }
 
     override fun getViewModel(): RecordHomeViewmodel {
-        return ViewModelProvider(this).get(RecordHomeViewmodel::class.java);
+        return ViewModelProvider(this, ViewModelFactoryWRecord(this.activity!!.application)).get(RecordHomeViewmodel::class.java);
     }
 }

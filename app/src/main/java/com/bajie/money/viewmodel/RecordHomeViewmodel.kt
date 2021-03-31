@@ -1,9 +1,15 @@
 package com.bajie.money.viewmodel
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bajie.money.R
 import com.bajie.money.model.dao.RecordDao
-import com.bajie.money.model.data.BottomTabData
+import com.bajie.money.model.data.Record
+import com.bajie.money.utils.TimeUtils
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
 
@@ -12,28 +18,31 @@ import com.bajie.money.model.data.BottomTabData
  */
 class RecordHomeViewmodel(val local: RecordDao) : ViewModel() {
 
-    fun init() {
+    val fiveRecords  = MutableLiveData<ArrayList<Record>>(ArrayList<Record>());
+    val monthSpending = MutableLiveData<Float>(0.0f);
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun getMonthSpending() {
+        var params = TimeUtils.getFirstLastDayOfMonth();
+        local.getByTimeRange(params.a, params.b)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {t1, t2 ->
+                t1?.let{ it ->
+                    monthSpending.value = it.stream().mapToDouble {it.price.toDouble()}.sum().toFloat();
+                }
+            }
+
 
     }
 
-//    var testNum = 0;
-    var currentIndex = 0;
-    val bottomTabData = List<BottomTabData>(4) { i: Int ->
-        when (i) {
-            0 -> BottomTabData("账本", R.drawable.icon_tab_hat, R.drawable.icon_tab_hat_unselected, true);
-            1 -> BottomTabData("记账", R.drawable.icon_tab_heels, R.drawable.icon_tab_heels_unselected, false);
-            2 -> BottomTabData("标签三", R.drawable.icon_tab_panties, R.drawable.icon_tab_panties_unseleted, false);
-            3 -> BottomTabData("标签四", R.drawable.icon_tab_sock, R.drawable.icon_tab_sock_unselected, false);
-            else -> BottomTabData("标签四", R.drawable.icon_tab_sock, R.drawable.icon_tab_sock_unselected, false);
-        }
-    };
-
-    fun changeTabSelected(selected: Int): Boolean {
-        if(currentIndex == selected) return false;
-        bottomTabData.forEachIndexed { index, bottomTabData ->
-            bottomTabData.isSelected.set(index == selected);
-        }
-        currentIndex = selected;
-        return true
+    fun getFiveRecords(): Single<ArrayList<Record>> {
+        return local.getFiveRecords()
+            .map {
+                fiveRecords.value!!.addAll(it);
+                fiveRecords.value!!;
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 }

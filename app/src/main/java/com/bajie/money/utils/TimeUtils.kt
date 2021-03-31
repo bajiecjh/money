@@ -11,6 +11,7 @@ import java.util.*
 class TimeUtils {
 
     companion object {
+        const val TIME_PATTERN = "yyyy/MM/dd HH:mm"
         // 获取当前时间
         fun getNowTime(pattern: String): String {
             val simpleDateFormat = SimpleDateFormat(pattern);
@@ -24,15 +25,16 @@ class TimeUtils {
             return simpleDateFormat.format(calendar.time);
         }
         // 时间转时间戳
-        fun dateToStamp(time: String): String {
+        fun dateToStamp(time: String): Long {
             val simpleDateFormat = SimpleDateFormat();
             val date = simpleDateFormat.parse(time);
-            val ts = date.time;
-            return ts.toString();
+            return date.time;
         }
         // 时间戳转字符串
-        fun stampToDate(stamp: String, pattern: String): String {
+        @JvmStatic
+        fun stampToDate(stamp: Long, pattern: String): String {
             var dateFormat = SimpleDateFormat(pattern);
+            val date = Date(stamp);
             val times = dateFormat.format(Date(stamp));
             return times;
         }
@@ -49,5 +51,25 @@ class TimeUtils {
             calendar.time = date;
             return FiveParams(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
         }
+
+        fun getFirstLastDayOfMonth(): TwoParams<Long, Long> {
+            val calendar = Calendar.getInstance();
+            calendar.time = Date();
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            val first = calendar.time.time;
+
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            calendar.set(Calendar.HOUR_OF_DAY, 24)
+            calendar.set(Calendar.MINUTE, 59)
+            calendar.set(Calendar.SECOND, 59)
+            val last = calendar.time.time;
+            return TwoParams(first, last);
+
+        }
+
+
     }
 }

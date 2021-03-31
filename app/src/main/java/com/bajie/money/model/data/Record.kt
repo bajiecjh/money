@@ -15,12 +15,16 @@ class Record {
     var price: Float = 0.0f;
     var categoryId: Int = 0;
     var hint: String = "";
-    var time: String = "";
+    var time: Long = 0;
+    var categoryName: String = "";
+    var parentCategoryName: String = "";
 
-    constructor(price:Float, categoryId:Int, hint:String, time: String) {
+    constructor(price:Float, categoryId:Int, hint:String, time: Long, categoryName: String, parentCategoryName: String) {
         this.price = price;
         this.categoryId = categoryId;
         this.hint = hint;
         this.time = time;
+        this.categoryName = categoryName;
+        this.parentCategoryName = parentCategoryName
     }
 }

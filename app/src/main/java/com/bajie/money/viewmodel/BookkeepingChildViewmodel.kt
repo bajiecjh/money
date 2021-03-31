@@ -100,11 +100,24 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
         recordTime.value = TimeUtils.getNowTime("yyyy/MM/dd HH:mm")
     }
     fun addRecord(price:Float, hint:String): Completable {
-        val record = Record(price, category.value!!.id, hint, TimeUtils.dateToStamp(recordTime.value!!));
-        refreshRecordTime();
-        return recordDao.add(record)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread());
+        return Completable.create{  emitter ->
+            local.getCategoryById(category.value!!.parentId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe { t1, t2 ->
+                    t1?.let {
+                        val record = Record(price, category.value!!.id, hint, TimeUtils.dateToStamp(recordTime.value!!), category.value!!.name, t1.name);
+                        refreshRecordTime();
+                        recordDao.add(record)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe {
+                                emitter.onComplete();
+                            }
+                    }
+                    t2?.let {
+                        emitter.onError(t2);
+                    }
+                }
+        }
     }
 
     fun getDefaultCategory1(): Single<Category> {
