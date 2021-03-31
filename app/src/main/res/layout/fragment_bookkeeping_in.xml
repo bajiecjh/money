@@ -30,7 +30,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="20dp"
-            android:text="@{vm.emptyCategoryHint}"
+            android:text="您还未添加支出小类"
             android:textSize="16sp"/>
         <TextView
             android:id="@+id/txt2"
@@ -40,7 +40,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="10dp"
-            android:text="@{vm.clickToAddHint}"
+            android:text="点击添加支出类别"
             android:textSize="16sp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:textColor="@{vm.type == 0 ? @color/price_yellow : @color/price_green}"
+            android:textColor="#f9b70a"
             android:textSize="30dp"
             android:textStyle="bold"
             android:gravity="center"

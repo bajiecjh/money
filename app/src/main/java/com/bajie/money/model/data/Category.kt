@@ -11,10 +11,14 @@ import java.io.Serializable
  */
 @Entity(tableName = "categories")
 class Category: Serializable {
+    companion object {
+        const val OUT_PARENT_ID = -2;
+    }
+
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0;
     var name: String = "";
-    var parentId: Int = -1;
+    var parentId: Int = -1; // -1表示支出大类，-2表示收入小类
     var commonly: Int = 0;
 
     fun copy(): Category {

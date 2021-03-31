@@ -19,17 +19,18 @@ import kotlin.collections.ArrayList
  * bajie on 2021/1/4 16:04
 
  */
-class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDao: RecordDao) : ViewModel() {
-    // 0 支出，1收入
-    var position = 0;
+class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDao: RecordDao, val type: Int) : ViewModel() {
+    var emptyCategoryHint = ""
+    var clickToAddHint= ""
     val category = MutableLiveData<Category>(null);
     val commonlyList: MutableLiveData<ArrayList<Category>> by lazy {
         MutableLiveData<ArrayList<Category>>();
     };
     var recordTime = MutableLiveData<String>();
 
-    companion object {
-        const val POSITION = "position";
+    init {
+        emptyCategoryHint = if(type == 0) "您还未添加支出小类" else "您还未添加收入小类";
+        clickToAddHint = if(type == 0) "点击添加支出类别" else "点击添加收入类别";
     }
 
     fun setRecordTime(time: String) {
@@ -88,7 +89,7 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
     }
 
     fun getCommonlyList() {
-        local.getCommonlyList().subscribeOn(Schedulers.io())
+        local.getOutCommonlyList().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { list, _ ->
                 commonlyList.value= list as ArrayList<Category>?;
@@ -150,7 +151,7 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
     }
 
     private fun getFirstCommonly(): Single<Category> {
-        return local.getCommonlyList()
+        return local.getOutCommonlyList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map {

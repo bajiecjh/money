@@ -27,7 +27,7 @@ class ParentCategoryListViewmodel constructor(val local: CategoryDao) : ViewMode
     }
 
     fun getList(): Single<MutableList<Category>>? =
-        local.getList()
+        local.getParentList()
             .map { t->
                 val add = Category();
                 add.name = "添加大类";

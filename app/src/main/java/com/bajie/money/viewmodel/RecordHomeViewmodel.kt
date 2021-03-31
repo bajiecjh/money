@@ -32,8 +32,6 @@ class RecordHomeViewmodel(val local: RecordDao) : ViewModel() {
                     monthSpending.value = it.stream().mapToDouble {it.price.toDouble()}.sum().toFloat();
                 }
             }
-
-
     }
 
     fun getFiveRecords(): Single<ArrayList<Record>> {

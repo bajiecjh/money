@@ -14,6 +14,8 @@
     <color name="pink_FCBECF">#FCBECF</color>
     <color name="yellow_faf6ee">#faf6ee</color>
     <color name="gray_f1f1f3">#f1f1f3</color>
+    <color name="yellow_f9b70a">#f9b70a</color>
+    <color name="green_64912c">#64912c</color>
 
 
 
@@ -26,6 +28,8 @@
     <color name="gray_backgroud">@color/gray_fafafa</color>
     <color name="font_color_black">@color/black_161616</color>
     <color name="font_color_gray">@color/gray_8B8A8F</color>
+    <color name="price_yellow">@color/yellow_f9b70a</color>
+    <color name="price_green">@color/green_64912c</color>
 
 
 <!--    -->

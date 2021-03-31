@@ -33,3 +33,12 @@ class ViewModelFactoryWCategoryRecord(private val application: Application): Vie
     }
 
 }
+
+class ViewModelFactoryBookkeepingChild(private val application: Application, private val type: Int): ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        val category = AppDatabase.getInstance(application).categoryDao();
+        val record = AppDatabase.getInstance(application).recordDao();
+        return modelClass.getConstructor(CategoryDao::class.java, RecordDao::class.java, Int::class.java).newInstance(category, record, type);
+    }
+
+}

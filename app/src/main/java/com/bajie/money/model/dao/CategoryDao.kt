@@ -19,7 +19,7 @@ interface CategoryDao {
 //    fun getCount(): Single<Int>
 //
     @Query("SELECT * FROM categories WHERE parentId = -1")
-    fun getList(): Single<List<Category>>;
+    fun getParentList(): Single<List<Category>>;
 
     @Query("SELECT * FROM categories WHERE parentId = :parentId")
     fun getChildListByParentId(parentId: Int): Single<List<Category>>;
@@ -28,8 +28,11 @@ interface CategoryDao {
     fun getChildList(): Single<List<Category>>;
 
 
-    @Query("SELECT * FROM categories WHERE commonly = 1")
-    fun getCommonlyList(): Single<List<Category>>;
+    @Query("SELECT * FROM categories WHERE commonly = 1 AND parentId != -2")
+    fun getOutCommonlyList(): Single<List<Category>>;
+
+    @Query("SELECT * FROM categories WHERE commonly = 1 AND parentId == -2")
+    fun getInCommonlyList(): Single<List<Category>>;
 
     @Query("SELECT * FROM categories WHERE id = :id")
     fun getCategoryById(id: Int): Single<Category>;

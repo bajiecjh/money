@@ -21,7 +21,7 @@ import io.reactivex.schedulers.Schedulers
  */
 class CategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
     // top数据
-    val title = MutableLiveData<String>("支出列别");
+    var title = "";
     val rightIcon = R.drawable.icon_setting;
 
     val isEmptyCommonly = MutableLiveData<Boolean>(false);
@@ -30,13 +30,33 @@ class CategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
      val childList = ArrayList<Category>();
     var currentSelected = 0;
 
-    val COMMONLY_INDEX = 0;
+    var type = 0
 
-    fun getList(): Single<ArrayList<Category>>? =
-        local.getList()
-//            .doOnSuccess {
-//                System.out.println("test")
-//            }
+    fun init(type:Int) {
+        this.type = type
+        this.title = if(isOutType()) "支出类别" else "收入类别"
+    }
+
+
+
+    fun getParentList():Single<ArrayList<Category>> {
+        return if(isOutType()) getOutParentList() else getInParentList();
+    }
+
+    private fun getInParentList(): Single<ArrayList<Category>> {
+        return Single.create { emitter ->
+            parentList.clear();
+            val commonly = Category();
+            commonly.name = "常用";
+            parentList?.add(0, commonly);
+            val all = Category();
+            all.name = "全部";
+            parentList.add(all);
+            emitter.onSuccess(parentList);
+        }
+    }
+    private fun getOutParentList(): Single<ArrayList<Category>> =
+        local.getParentList()
             .map { t ->
                 parentList.clear();
                 parentList.addAll(t);
@@ -51,17 +71,31 @@ class CategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    private fun getCommonlyList(): Single<ArrayList<Category>> {
-        return local.getCommonlyList()
-            .map { list ->
-                childList.clear();
-                childList.addAll(list);
-                isEmptyCommonly.postValue(list.isEmpty());
-                childList;
 
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread());
+    private fun getCommonlyList(): Single<ArrayList<Category>> {
+        if (isOutType()) {
+            return local.getOutCommonlyList()
+                .map { list ->
+                    childList.clear();
+                    childList.addAll(list);
+                    isEmptyCommonly.postValue(list.isEmpty());
+                    childList;
+
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        } else {
+            return local.getInCommonlyList()
+                .map { list ->
+                    childList.clear();
+                    childList.addAll(list);
+                    isEmptyCommonly.postValue(list.isEmpty());
+                    childList;
+
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        }
     }
 
     fun getChildList(): Single<ArrayList<Category>> {
@@ -69,7 +103,7 @@ class CategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
         if(isCurrentCommonly()) {
             return getCommonlyList();
         }
-        val parentId = parentList.get(currentSelected).id;
+        val parentId = if(isOutType()) parentList[currentSelected].id else Category.OUT_PARENT_ID;
         return local.getChildListByParentId(parentId)
             .map { list ->
                 childList.clear();
@@ -110,25 +144,6 @@ class CategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-
-
-//        return local.update(category)
-//            .to {
-//                oldCategory.commonly = category.commonly;
-//                if(currentSelected == 0) {
-//                    getChildList().subscribe { list: ArrayList<Category>?, t: Throwable? ->
-//                        list?.run {
-//                            childList.clear();
-//                            childList.addAll(list);
-//                            isEmptyCommonly.postValue(list.isEmpty());
-//                            childList;
-//                        }
-//                    }
-//                }
-//                it
-//            }
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread());
     }
 
     fun isCommonly(position: Int): Boolean {
@@ -145,19 +160,12 @@ class CategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
         return flag;
     }
 
-//    fun updateChildCategory(childIndex: Int): Completable {
-//        return local.update(childList[childIndex])
-//            .to {
-//
-//                it;
-//            }
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread());
-//    }
 
     fun getCurrentParentId(): Int {
         return parentList.get(currentSelected).id;
     }
 
-
+    public fun isOutType():Boolean {
+        return type == 0
+    }
 }

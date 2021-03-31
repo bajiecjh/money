@@ -62,7 +62,7 @@ class TimeUtils {
             val first = calendar.time.time;
 
             calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-            calendar.set(Calendar.HOUR_OF_DAY, 24)
+            calendar.set(Calendar.HOUR_OF_DAY, 23)
             calendar.set(Calendar.MINUTE, 59)
             calendar.set(Calendar.SECOND, 59)
             val last = calendar.time.time;

@@ -32,17 +32,11 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding, CategoryViewmodel>
         const val ADD_CATEGORY_CODE = 100;
         const val ADD_CHILD_CODE = 101;
 
-        fun startForResult(activity: Activity, requestCode: Int) {
-            val intent = Intent(activity, CategoryActivity::class.java);
-            activity.startActivityForResult(intent, requestCode);
-        }
-        fun startForResult(fragment: Fragment, requestCode: Int) {
+        // 0：支出，1：收入
+        fun startForResult(fragment: Fragment, type: Int, requestCode: Int) {
             val intent = Intent(fragment.context, CategoryActivity::class.java);
+            intent.putExtra("data", type);
             fragment.startActivityForResult(intent, requestCode);
-        }
-        fun start(activity: Activity) {
-            val intent = Intent(activity, CategoryActivity::class.java);
-            activity.startActivity(intent);
         }
     }
 
@@ -56,6 +50,7 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding, CategoryViewmodel>
     }
 
     override fun init() {
+        mViewModel.init(intent.getIntExtra("data", 0));
         mLayoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
 
 //        mViewModel = ViewModelProvider(this, ViewModelFactory(application)).get(CategoryViewmodel::class.java);
@@ -96,7 +91,7 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding, CategoryViewmodel>
             }
     }
     private fun refreshParentList() {
-        mViewModel.getList()
+        mViewModel.getParentList()
             ?.subscribe {t1: ArrayList<Category>?, t: Throwable? ->
                 t1?.run {
                     mParentAdapter.addAll(t1);
@@ -195,12 +190,12 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding, CategoryViewmodel>
             val data = mDataList[position];
             holder.binding.setVariable(BR.category, data);
             holder.binding.setVariable(BR.isSelected, position == mViewModel.currentSelected);
-            holder.binding.setVariable(BR.isAddItem, position == mDataList.size-1);
+            holder.binding.setVariable(BR.isAddItem, position == mDataList.size-1 && mViewModel.isOutType());
             holder.binding.executePendingBindings();
             holder.itemView.setOnClickListener{v: View? ->
                 run {
-                    // 点击添加
-                    if(position == mDataList.size-1) {
+                    // 点击添加(支出类别才能添加大类
+                    if(position == mDataList.size-1 && mViewModel.isOutType()) {
                         EditCategoryActivity.startAddParent(
                             this@CategoryActivity,
                             ADD_CATEGORY_CODE
