@@ -32,14 +32,25 @@ class EditCategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
         category.value = Category();
     }
 
+
+
+
     fun initData(params: HashMap<String, Int>): Completable {
         type = params[EditCategoryActivity.TYPE]!!;
-        when(type) {
-            TYPE_CREATE_CHILD -> title.value = "添加支出小类";
-            TYPE_CREATE_PARENT -> title.value = "添加支出大类";
-            TYPE_EDIT_PARENT -> title.value = "编辑支出大类";
-            TYPE_EDIT_CHILD -> title.value = "编辑支出小类";
+        if(params[EditCategoryActivity.PARENT_ID] != Category.OUT_PARENT_ID) {
+            when(type) {
+                TYPE_CREATE_CHILD -> title.value = "添加支出小类";
+                TYPE_CREATE_PARENT -> title.value = "添加支出大类";
+                TYPE_EDIT_PARENT -> title.value = "编辑支出大类";
+                TYPE_EDIT_CHILD -> title.value = "编辑支出小类";
+            }
+        } else {
+            when(type) {
+                TYPE_CREATE_CHILD -> title.value = "添加收入小类";
+                TYPE_EDIT_CHILD -> title.value = "编辑收入小类";
+            }
         }
+
         params[EditCategoryActivity.PARENT_ID]?.run { category.value?.parentId =this; }
         params[EditCategoryActivity.ID]?.run { category.value?.id = this}
         // 如果是编辑支出大类，需要获取大类信息，和小类列表

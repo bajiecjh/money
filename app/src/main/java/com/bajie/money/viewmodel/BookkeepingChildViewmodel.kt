@@ -6,6 +6,7 @@ import com.bajie.money.model.dao.CategoryDao
 import com.bajie.money.model.dao.RecordDao
 import com.bajie.money.model.data.Category
 import com.bajie.money.model.data.Record
+import com.bajie.money.utils.Canstant
 import com.bajie.money.utils.TimeUtils
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -19,19 +20,17 @@ import kotlin.collections.ArrayList
  * bajie on 2021/1/4 16:04
 
  */
-class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDao: RecordDao, val type: Int) : ViewModel() {
+class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDao: RecordDao) : ViewModel() {
     var emptyCategoryHint = ""
     var clickToAddHint= ""
     val category = MutableLiveData<Category>(null);
+    private var isFirstGetData = true
     val commonlyList: MutableLiveData<ArrayList<Category>> by lazy {
         MutableLiveData<ArrayList<Category>>();
     };
     var recordTime = MutableLiveData<String>();
+    var type = 0;
 
-    init {
-        emptyCategoryHint = if(type == 0) "您还未添加支出小类" else "您还未添加收入小类";
-        clickToAddHint = if(type == 0) "点击添加支出类别" else "点击添加收入类别";
-    }
 
     fun setRecordTime(time: String) {
         recordTime.value = time;
@@ -51,11 +50,14 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
         }
     }
 
-    fun init() {
+    fun init(type: Int) {
+        this.type = type;
+        emptyCategoryHint = if(isOutType()) "您还未添加支出小类" else "您还未添加收入小类";
+        clickToAddHint = if(isOutType()) "点击添加支出类别" else "点击添加收入类别";
         refreshRecordTime();
-        getDefaultCategory();
         getCommonlyList();
     }
+
 
     fun setNewCategory(newCategory: Category?) {
         category.value = newCategory;
@@ -67,21 +69,31 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
         return null;
     }
     fun getDefaultCategory() {
-        getDefaultFood().subscribe { t1: Category?, _ ->
-            if(t1 != null) {
+        if (isOutType()) getOutDefaultCategory() else getInDefaultCategory();
+    }
+
+    private fun getInDefaultCategory() {
+        if(commonlyList.value!!.size > 0) {
+            category.value = commonlyList.value!![0]
+        } else {
+            getFirstInChild().subscribe { t1, _ ->
                 category.value = t1;
-            } else {    // 获取常用类型第一个
-                getFirstCommonly().subscribe { t1: Category?, _ ->
-                    if(t1 != null) {
+            }
+        }
+    }
+
+    private fun getOutDefaultCategory() {
+        getDefaultFood().subscribe { t1: Category?, _ ->
+            when {
+                t1 != null -> {
+                    category.value = t1;
+                }
+                commonlyList.value!!.size>0 -> {    // 获取常用类型第一个
+                    category.value = commonlyList.value!![0];
+                }
+                else -> { // 获取小类第一个
+                    getFirstOutChild().subscribe { t1, _ ->
                         category.value = t1;
-                    } else {    // 获取小类第一个
-                        getFirstChild().subscribe { t1, t2 ->
-                            if(t1 != null) {
-                                category.value = t1;
-                            } else {
-                                category.value = null;
-                            }
-                        }
                     }
                 }
             }
@@ -89,12 +101,32 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
     }
 
     fun getCommonlyList() {
+        if(isOutType()) getOutCommonlyList() else getInCommonlyList();
+    }
+
+    private fun getOutCommonlyList() {
         local.getOutCommonlyList().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { list, _ ->
-                commonlyList.value= list as ArrayList<Category>?;
+                getCommonlySuccess(list)
             }
 
+    }
+
+    private fun getInCommonlyList() {
+        local.getInCommonlyList().subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { list, _ ->
+                getCommonlySuccess(list)
+            }
+    }
+
+    private fun getCommonlySuccess(list: List<Category>?) {
+        list?.let { commonlyList.value= it as ArrayList<Category>; }
+        if (isFirstGetData) {
+            getDefaultCategory()
+            isFirstGetData = false;
+        }
     }
 
     private fun refreshRecordTime() {
@@ -105,7 +137,7 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
             local.getCategoryById(category.value!!.parentId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe { t1, t2 ->
                     t1?.let {
-                        val record = Record(price, category.value!!.id, hint, TimeUtils.dateToStamp(recordTime.value!!), category.value!!.name, t1.name);
+                        val record = Record(price, category.value!!.id, hint, TimeUtils.dateToStamp(recordTime.value!!), category.value!!.name, t1.name, type);
                         refreshRecordTime();
                         recordDao.add(record)
                             .subscribeOn(Schedulers.io())
@@ -121,44 +153,7 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
         }
     }
 
-    fun getDefaultCategory1(): Single<Category> {
-        return Single.create{emitter ->
-            // 先获取食物类型
-            getDefaultFood().subscribe { t1: Category?, _ ->
-                if(t1 != null) {
-                    category.value = t1;
-                    emitter.onSuccess(t1);
-                } else {    // 获取常用类型第一个
-                    getFirstCommonly().subscribe { t1: Category?, _ ->
-                        if(t1 != null) {
-                            category.value = t1;
-                            emitter.onSuccess(t1);
-                        } else {    // 获取小类第一个
-                            getFirstChild().subscribe { t1, t2 ->
-                                if(t1 != null) {
-                                    category.value = t1;
-                                    emitter.onSuccess(t1)
-                                } else {
-                                    category.value = null;
-                                    emitter.onError(Throwable("No category"));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 
-    private fun getFirstCommonly(): Single<Category> {
-        return local.getOutCommonlyList()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map {
-                it[0];
-            }
-
-    }
 
     fun getCommonlyListSize(): Int {
         this.commonlyList.value?.let {
@@ -167,13 +162,15 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
         return 0;
     }
 
-    private fun getFirstChild(): Single<Category> {
-        return local.getChildList()
+    private fun getFirstOutChild(): Single<Category> {
+        return local.getFirstOutChild()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .map {
-                it[0];
-            }
+    }
+    private fun getFirstInChild(): Single<Category> {
+        return local.getFirstInChild()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     private fun getDefaultFood(): Single<Category> {
@@ -197,5 +194,9 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
 
     public fun isSame(position: Int): Boolean {
         return category.value?.id == commonlyList.value!![position].id;
+    }
+
+    public fun isOutType(): Boolean {
+        return type == Canstant.OUT_TYPE
     }
 }

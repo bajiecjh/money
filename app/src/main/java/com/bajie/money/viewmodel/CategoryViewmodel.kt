@@ -1,18 +1,16 @@
 package com.bajie.money.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.R
 import com.bajie.money.model.dao.CategoryDao
 import com.bajie.money.model.data.Category
-import com.bajie.money.model.loacal.AppDatabase
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import com.bajie.money.utils.Canstant
 
 /**
 
@@ -162,10 +160,10 @@ class CategoryViewmodel constructor(val local: CategoryDao) : ViewModel() {
 
 
     fun getCurrentParentId(): Int {
-        return parentList.get(currentSelected).id;
+        return if(isOutType()) parentList[currentSelected].id else Category.OUT_PARENT_ID;
     }
 
     public fun isOutType():Boolean {
-        return type == 0
+        return type == Canstant.OUT_TYPE
     }
 }

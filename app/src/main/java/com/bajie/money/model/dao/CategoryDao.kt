@@ -14,19 +14,21 @@ import io.reactivex.Single
 interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(category: Category): Completable
-//
-//    @Query("SELECT count(*) FROM movies")
-//    fun getCount(): Single<Int>
-//
+
     @Query("SELECT * FROM categories WHERE parentId = -1")
     fun getParentList(): Single<List<Category>>;
+
+    @Query("SELECT * FROM categories WHERE parentId = -2")
+    fun getInTypeList(): Single<List<Category>>;
 
     @Query("SELECT * FROM categories WHERE parentId = :parentId")
     fun getChildListByParentId(parentId: Int): Single<List<Category>>;
 
-    @Query("SELECT * FROM categories WHERE parentId != -1")
-    fun getChildList(): Single<List<Category>>;
+    @Query("SELECT * FROM categories WHERE parentId != -1 AND parentId != -2 LIMIT 1")
+    fun getFirstOutChild(): Single<Category>;
 
+    @Query("SELECT * FROM categories WHERE parentId == -2 LIMIT 1")
+    fun getFirstInChild(): Single<Category>;
 
     @Query("SELECT * FROM categories WHERE commonly = 1 AND parentId != -2")
     fun getOutCommonlyList(): Single<List<Category>>;
@@ -48,10 +50,6 @@ interface CategoryDao {
 
     @Query("DELETE FROM categories WHERE parentId = :parentId")
     fun deleteChildByParentId(parentId: Int): Completable
-
-
-
-
 
     @Update
     fun update(category: Category): Completable

@@ -97,8 +97,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/edit_text"
-            android:textColor="#f9b70a"
+            app:layout_constraintRight_toLeftOf="@id/price_edit"
+            android:textColor="@{vm.isOutType() ? @color/price_yellow : @color/price_green}"
             android:text="￥"
             android:textSize="30dp"
             android:textStyle="bold"
@@ -106,19 +106,21 @@
             android:inputType="numberDecimal"
             android:background="@null"/>
         <EditText
-            android:id="@+id/edit_text"
+            android:id="@+id/price_edit"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:textColor="@{vm.type == 0 ? @color/price_yellow : @color/price_green}"
+            android:textColor="@{vm.isOutType() ? @color/price_yellow : @color/price_green}"
             android:textSize="30dp"
             android:textStyle="bold"
             android:gravity="center"
-            android:inputType="numberDecimal"
+            android:inputType="text"
             android:background="@null"
             android:focusableInTouchMode="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <LinearLayout
             android:id="@+id/commonly_list_content"
@@ -215,7 +217,9 @@
             app:layout_constraintTop_toBottomOf="@id/commonly_list_content"
             android:layout_marginTop="20dp"
             android:textSize="14dp"
-            android:hint="备注"/>
+            android:hint="备注"
+            android:imeOptions="actionDone"
+            android:inputType="text" />
 
 
         <TextView

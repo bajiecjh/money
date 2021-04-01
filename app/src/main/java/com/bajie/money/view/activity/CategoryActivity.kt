@@ -105,9 +105,7 @@ class CategoryActivity: BaseActivity<ActivityCategoryBinding, CategoryViewmodel>
 
     override fun onClick(v: View) {
         when(v?.id) {
-            R.id.right_btn -> ParentCategoryListActivity.start(
-                this
-            );
+            R.id.right_btn -> ParentCategoryListActivity.startForResult(this, ADD_CATEGORY_CODE, mViewModel.type);
             R.id.back -> {
                 val intent = Intent();
                 setResult(Activity.RESULT_OK, intent);

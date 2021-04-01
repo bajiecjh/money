@@ -16,8 +16,7 @@ import com.bajie.money.R
 import com.bajie.money.databinding.ActivityParentCategoryListBinding
 import com.bajie.money.databinding.ItemParentCategoryBinding
 import com.bajie.money.model.data.Category
-import com.bajie.money.view.activity.BaseActivity
-import com.bajie.money.view.activity.EditCategoryActivity
+import com.bajie.money.utils.Canstant
 import com.bajie.money.viewmodel.ParentCategoryListViewmodel
 import com.bajie.money.viewmodel.ViewModelFactory
 
@@ -31,9 +30,10 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
     companion object {
         const val ADD_CATEGORY_CODE = 100;
         const val EDIT_CATEGORY_CODE = 101;
-        fun start(context: Activity) {
+        fun startForResult(context: Activity, requestCode: Int, type: Int) {
             val intent = Intent(context, ParentCategoryListActivity::class.java);
-            context.startActivity(intent);
+            intent.putExtra(Canstant.INTENT_DATA, type);
+            context.startActivityForResult(intent, requestCode);
         }
     }
     private lateinit var mAdapter: ListAdapter;
@@ -46,6 +46,7 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
         mBinding.list.layoutManager = LinearLayoutManager(this);
         mAdapter = ListAdapter(this);
         mBinding.list.adapter = mAdapter;
+        mViewModel.init(intent.getIntExtra(Canstant.INTENT_DATA, 0))
         this.refreshiList();
 
         mBinding.header.back.setOnClickListener(this);
@@ -74,7 +75,7 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
 
     class ListViewHolder(val binding: ItemParentCategoryBinding): RecyclerView.ViewHolder(binding.root) {
     }
-    class ListAdapter(val context: Context): RecyclerView.Adapter<ListViewHolder>() {
+    inner class ListAdapter(val context: Context): RecyclerView.Adapter<ListViewHolder>() {
         private val mDataList = ArrayList<Category>();
         private val mLayoutInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
@@ -91,11 +92,20 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
             holder.binding.setVariable(BR.category, data);
             holder.binding.setVariable(BR.isFirstItem, position == 0);
             holder.itemView.setOnClickListener{
-                if(position == itemCount - 1) {
-                    EditCategoryActivity.startAddParent(context as Activity, ADD_CATEGORY_CODE);
+                if(mViewModel.isOutType()) {
+                    if(position == itemCount - 1) {
+                        EditCategoryActivity.startAddParent(context as Activity, ADD_CATEGORY_CODE);
+                    } else {
+                        EditCategoryActivity.startEditParent(context as Activity, EDIT_CATEGORY_CODE, data.id);
+                    }
                 } else {
-                    EditCategoryActivity.startEditParent(context as Activity, EDIT_CATEGORY_CODE, data.id);
+                    if(position == itemCount - 1) {
+                        EditCategoryActivity.startCreateChild(context as Activity, ADD_CATEGORY_CODE, Canstant.IN_PARENT_ID);
+                    } else {
+                        EditCategoryActivity.startEditChild(context as Activity, EDIT_CATEGORY_CODE, data.id, Canstant.IN_PARENT_ID);
+                    }
                 }
+
             }
         }
 
@@ -109,7 +119,10 @@ class ParentCategoryListActivity: BaseActivity<ActivityParentCategoryListBinding
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.back -> finish();
+            R.id.back -> {
+                setResult(Activity.RESULT_OK, Intent())
+                finish()
+            };
         }
     }
 

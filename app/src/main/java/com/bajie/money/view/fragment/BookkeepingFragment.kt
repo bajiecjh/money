@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bajie.money.R
 import com.bajie.money.databinding.FragmentBookkeepingBinding
+import com.bajie.money.utils.Canstant
 import com.bajie.money.viewmodel.BookkeepingViewmodel
 
 /**
@@ -56,7 +57,7 @@ class MyAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
     }
 
     override fun createFragment(position: Int): Fragment {
-        return if (position == 0) BookkeepingOutFragment() else BookkeepingInFragment();
+        return if (position == 0) BookkeepingOutFragment(Canstant.OUT_TYPE) else BookkeepingOutFragment(Canstant.IN_TYPE);
     }
 }
 

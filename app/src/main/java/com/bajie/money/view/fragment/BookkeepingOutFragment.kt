@@ -3,7 +3,12 @@ package com.bajie.money.view.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -28,7 +33,8 @@ import io.reactivex.functions.Consumer
  * bajie on 2021/2/1 14:47
 
  */
-class BookkeepingOutFragment : BaseFragment<FragmentBookkeepingChildBinding, BookkeepingChildViewmodel>(), View.OnClickListener {
+class BookkeepingOutFragment(val type: Int) : BaseFragment<FragmentBookkeepingChildBinding, BookkeepingChildViewmodel>(), View.OnClickListener,
+    TextView.OnEditorActionListener {
     private val mCommonlyAdapter: CommonlyAdapter by lazy {
         CommonlyAdapter(this!!.context!!);
     }
@@ -44,19 +50,18 @@ class BookkeepingOutFragment : BaseFragment<FragmentBookkeepingChildBinding, Boo
 
     override fun init() {
 
-        mViewModel.init();
+        mViewModel.init(type);
         mViewModel.category.observe(this,
             Observer<Category> { t ->
                 if(t != null) {
                     mBinding.category.setOnClickListener(this@BookkeepingOutFragment);
                     mBinding.more.setOnClickListener(this);
                     mBinding.setAsCommonly.setOnClickListener(this);
-                    mBinding.editText.requestFocus();
+                    mBinding.priceEdit.requestFocus();
                     mBinding.save.setOnClickListener(this);
                     mBinding.time.setOnClickListener(this);
-//                    mBinding.time.text = TimeUtils.getNowTime("MM/dd HH:mm")
-//                    mBinding.saveReedit.setOnClickListener(this);
-                    SoftInputUtil.showSoftInput(mBinding.editText);
+                    mBinding.priceEdit.setOnEditorActionListener(this)
+                    SoftInputUtil.showSoftInput(mBinding.priceEdit);
                 } else {
                     mBinding.noCategory.setOnClickListener(this@BookkeepingOutFragment);
                 }
@@ -91,10 +96,10 @@ class BookkeepingOutFragment : BaseFragment<FragmentBookkeepingChildBinding, Boo
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.category,R.id.noCategory, R.id.no_commonly, R.id.more -> CategoryActivity.startForResult(this, 0,REQUEST_CODE_EDIT_CATEGORY);
+            R.id.category,R.id.noCategory, R.id.no_commonly, R.id.more -> CategoryActivity.startForResult(this, mViewModel.type,REQUEST_CODE_EDIT_CATEGORY);
             R.id.set_as_commonly -> mViewModel.setCategoryAsCommonly();
             R.id.save -> {
-                val price = mBinding.editText.text.toString()
+                val price = mBinding.priceEdit.text.toString()
                 if(price.isEmpty()) {
                     showToast("请输入一个有效金额");
                     return
@@ -103,7 +108,7 @@ class BookkeepingOutFragment : BaseFragment<FragmentBookkeepingChildBinding, Boo
                     .subscribe(
                         Action {
                             showToast("添加成功")
-                            mBinding.editText.setText("");
+                            mBinding.priceEdit.setText("");
                             mBinding.hint.setText("");
                         },
                         Consumer<Throwable> { showToast("添加失败")})
@@ -123,6 +128,20 @@ class BookkeepingOutFragment : BaseFragment<FragmentBookkeepingChildBinding, Boo
 
         override fun onBindViewHolder(holder: BaseViewHolder<ItemCommonlyBinding>, position: Int) {
             val data = mViewModel.commonlyList.value!![position];
+            var background = if(mViewModel.isSame(position)) {
+                if (mViewModel.isOutType()) {
+                    R.drawable.commonly_item_selected_bg
+                } else {
+                    R.drawable.commonly_in_item_selected_bg
+                }
+            } else {
+                if (mViewModel.isOutType()) {
+                    R.drawable.commonly_item_bg
+                } else {
+                    R.drawable.commonly_in_item_bg
+                }
+            }
+            holder.binding.setVariable(BR.background, getDrawable(background));
             holder.binding.setVariable(BR.category, data);
             holder.binding.setVariable(BR.isSelected, mViewModel.isSame(position))
             holder.binding.executePendingBindings();
@@ -135,6 +154,17 @@ class BookkeepingOutFragment : BaseFragment<FragmentBookkeepingChildBinding, Boo
     }
 
     override fun getViewModel(): BookkeepingChildViewmodel {
-        return ViewModelProvider(this, ViewModelFactoryBookkeepingChild(activity?.application!!, 0)).get(BookkeepingChildViewmodel::class.java);
+        return ViewModelProvider(this, ViewModelFactoryWCategoryRecord(activity?.application!!)).get(BookkeepingChildViewmodel::class.java);
+    }
+
+    private fun getDrawable(drawableId: Int): Drawable? {
+        return ResourcesCompat.getDrawable(resources, drawableId, null)
+    }
+
+    override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        if(actionId == EditorInfo.IME_ACTION_DONE) {
+            showToast("完成")
+        }
+        return true;
     }
 }

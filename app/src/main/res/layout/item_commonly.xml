@@ -9,6 +9,9 @@
         <variable
             name="isSelected"
             type="boolean" />
+        <variable
+            name="background"
+            type="android.graphics.drawable.Drawable" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -17,7 +20,8 @@
     android:paddingBottom="5dp"
     android:layout_marginRight="5dp"
     tools:context=".view.DataBindingActivity"
-    android:background="@{isSelected?@drawable/commonly_item_selected_bg:@drawable/commonly_item_bg}">
+    android:background="@{background}">
+<!--    android:background="@{isSelected?@drawable/commonly_item_selected_bg:@drawable/commonly_item_bg}"-->
 
     <TextView
         android:id="@+id/name"

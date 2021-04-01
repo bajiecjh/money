@@ -65,11 +65,12 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding, EditCatego
             context.startActivityForResult(intent, requestCode);
         }
 
-        fun startEditChild(context: Activity, requestCode: Int, id: Int) {
+        fun startEditChild(context: Activity, requestCode: Int, id: Int, parentId: Int) {
             val intent = Intent(context, EditCategoryActivity::class.java);
             val params = HashMap<String, Int>();
             params[TYPE] = EditCategoryViewmodel.TYPE_EDIT_CHILD;
             params[ID] = id;
+            params[PARENT_ID] = parentId;
             intent.putExtra(PARAMS, params);
             context.startActivityForResult(intent, requestCode);
         }
@@ -127,16 +128,13 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding, EditCatego
                     .subscribe {
                         val msg = if(mViewModel.isAdd()) "添加成功" else "修改成功";
                         showToast(msg);
-                        val intent = Intent();
-                        setResult(Activity.RESULT_OK, intent);
-                        finish();
+                        resultOkFinish();
                     }
             };
             R.id.delete, R.id.delete1 -> {
                 val msg = if(mViewModel.isEditParent()) "确定删除该大类？" else "确定删除该小类？";
                 BaseDialog(this)
                     .setMessage(msg).show(supportFragmentManager, "delete");
-
             }
         }
     }
@@ -144,12 +142,15 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding, EditCatego
     override fun onDialogPositiveClick(dialog: DialogFragment) {
         mViewModel.deleteItem()?.subscribe ( Action {
             showToast("删除成功");
-            val intent = Intent();
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+            resultOkFinish();
         }, Consumer<Throwable> {
             showToast(it.message!!);
         } );
+    }
+
+    private fun resultOkFinish() {
+        setResult(Activity.RESULT_OK, Intent());
+        finish();
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {}
@@ -182,7 +183,8 @@ class EditCategoryActivity: BaseActivity<ActivityEditCategoryBinding, EditCatego
                     startEditChild(
                         this@EditCategoryActivity,
                         REQUEST_CODE_EDIT_CHILD_CATEGORY,
-                        mViewModel.getChildId(position)
+                        mViewModel.getChildId(position),
+                        mViewModel.category.value!!.parentId
                     );
                 }
             }
