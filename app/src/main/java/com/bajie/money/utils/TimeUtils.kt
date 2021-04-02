@@ -19,10 +19,8 @@ class TimeUtils {
             return simpleDateFormat.format(date);
         }
         // 获取时间戳
-        fun getTimeString(): String {
-            val simpleDateFormat = SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
-            val calendar = Calendar.getInstance();
-            return simpleDateFormat.format(calendar.time);
+        fun getTimeString(): Long {
+            return System.currentTimeMillis()
         }
         // 时间转时间戳
         fun dateToStamp(time: String): Long {

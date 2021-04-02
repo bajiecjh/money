@@ -100,7 +100,8 @@ class BookkeepingOutFragment(val type: Int) : BaseFragment<FragmentBookkeepingCh
             R.id.category,R.id.noCategory, R.id.no_commonly, R.id.more -> CategoryActivity.startForResult(this, mViewModel.type,REQUEST_CODE_EDIT_CATEGORY);
             R.id.set_as_commonly -> mViewModel.setCategoryAsCommonly();
             R.id.save -> onSave();
-            R.id.time -> TimePickerActivity.startForResult(this, REQUEST_CODE_TIME_PICKER, mViewModel.recordTime.value!!);
+
+            R.id.time -> TimePickerActivity.startForResult(this, REQUEST_CODE_TIME_PICKER, if(mViewModel.recordTime.value!!.equals("此刻"))"" else mViewModel.recordTime.value!!);
         }
     }
 

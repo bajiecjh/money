@@ -28,7 +28,7 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
     val commonlyList: MutableLiveData<ArrayList<Category>> by lazy {
         MutableLiveData<ArrayList<Category>>();
     };
-    var recordTime = MutableLiveData<String>();
+    var recordTime = MutableLiveData<String>("此刻");
     var type = 0;
 
 
@@ -54,7 +54,6 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
         this.type = type;
         emptyCategoryHint = if(isOutType()) "您还未添加支出小类" else "您还未添加收入小类";
         clickToAddHint = if(isOutType()) "点击添加支出类别" else "点击添加收入类别";
-        refreshRecordTime();
         getCommonlyList();
     }
 
@@ -129,16 +128,14 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
         }
     }
 
-    private fun refreshRecordTime() {
-        recordTime.value = TimeUtils.getNowTime("yyyy/MM/dd HH:mm")
-    }
+
     fun addRecord(price:Float, hint:String): Completable {
         return Completable.create{  emitter ->
             local.getCategoryById(category.value!!.parentId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe { t1, t2 ->
                     t1?.let {
-                        val record = Record(price, category.value!!.id, hint, TimeUtils.dateToStamp(recordTime.value!!), category.value!!.name, t1.name, type);
-                        refreshRecordTime();
+                        val time: Long = if(recordTime.value.equals("此刻")) TimeUtils.getTimeString() else TimeUtils.dateToStamp(recordTime.value!!);
+                        val record = Record(price, category.value!!.id, hint, time, category.value!!.name, t1.name, type);
                         recordDao.add(record)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bajie.money.R
 import com.bajie.money.databinding.ActivityTimePickerBinding
+import com.bajie.money.utils.Canstant
 import com.bajie.money.utils.TimeUtils
 import com.bajie.money.viewmodel.TimePickerViewModel
 
@@ -24,7 +25,7 @@ class TimePickerActivity: BaseActivity<ActivityTimePickerBinding, TimePickerView
     companion object {
         fun startForResult(fragment: Fragment, requestCode: Int, data: String) {
             val intent = Intent(fragment.context, TimePickerActivity::class.java);
-            intent.putExtra("data", data);
+            intent.putExtra(Canstant.INTENT_DATA, data);
             fragment.startActivityForResult(intent, requestCode);
         }
     }
@@ -38,11 +39,13 @@ class TimePickerActivity: BaseActivity<ActivityTimePickerBinding, TimePickerView
     }
 
     private fun initPicker() {
-        var data = intent.getStringExtra("data");
-        val five = TimeUtils.getFiveParams(data);
-        mBinding.datePicker.init(five.a, five.b, five.c, null);
-        mBinding.timePicker.currentHour = five.d;
-        mBinding.timePicker.currentMinute = five.e;
+        var data = intent.getStringExtra(Canstant.INTENT_DATA);
+        if(!data.equals("")) {
+            val five = TimeUtils.getFiveParams(data);
+            mBinding.datePicker.init(five.a, five.b, five.c, null);
+            mBinding.timePicker.currentHour = five.d;
+            mBinding.timePicker.currentMinute = five.e;
+        }
     }
 
 
