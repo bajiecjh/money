@@ -1,7 +1,5 @@
 package com.bajie.money.viewmodel
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bajie.money.model.dao.RecordDao
@@ -18,7 +16,7 @@ import io.reactivex.schedulers.Schedulers
  */
 class RecordHomeViewmodel(val local: RecordDao) : ViewModel() {
 
-    val fiveRecords  = MutableLiveData<ArrayList<Record>>(ArrayList<Record>());
+    val fiveRecords  = MutableLiveData<MutableList<Record>>();
     val monthSpending = MutableLiveData<Float>(0.0f);
 
 
@@ -35,13 +33,13 @@ class RecordHomeViewmodel(val local: RecordDao) : ViewModel() {
             }
     }
 
-    fun getFiveRecords(): Single<ArrayList<Record>> {
-        return local.getFiveRecords()
-            .map {
-                fiveRecords.value!!.addAll(it);
+    fun getFiveRecords(): Single<MutableList<Record>> {
+        return local.getFiveRecords().subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { it ->
+                fiveRecords.value = it.toMutableList();
                 fiveRecords.value!!;
             }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+
     }
 }

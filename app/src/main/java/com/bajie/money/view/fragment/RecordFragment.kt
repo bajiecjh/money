@@ -25,6 +25,10 @@ class RecordFragment: BaseFragment<FragmentRecordBinding, RecordViewmodel>() {
         return ViewModelProvider(this).get(RecordViewmodel::class.java);
     }
 
+    public fun showRecordListFragment() {
+        mBinding.pager.currentItem = 2;
+    }
+
     inner class MyAdapter(): FragmentStateAdapter(this) {
         override fun getItemCount(): Int {
             return 2;

@@ -1,7 +1,6 @@
 package com.bajie.money.view.fragment
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bajie.money.BR
@@ -11,13 +10,15 @@ import com.bajie.money.databinding.ItemRecordBinding
 import com.bajie.money.model.data.Record
 import com.bajie.money.view.BaseRecyclerViewAdapter
 import com.bajie.money.view.BaseViewHolder
+import com.bajie.money.view.activity.HomeActivity
 import com.bajie.money.viewmodel.RecordHomeViewmodel
 import com.bajie.money.viewmodel.ViewModelFactoryWRecord
 
 /**
  * bajie on 2021/3/29 15:43
  */
-class RecordHomeFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeViewmodel>() {
+class RecordHomeFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeViewmodel>(),
+    View.OnClickListener {
     private val mAdapter: MyAdapter by lazy {
         MyAdapter();
     }
@@ -26,8 +27,12 @@ class RecordHomeFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeView
         return R.layout.fragment_record_home;
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun init() {
+
+        mBinding.click2Add.setOnClickListener(this)
+        mBinding.bookkeeping.setOnClickListener(this)
+        mBinding.arrow.setOnClickListener(this)
+
         mBinding.list.layoutManager = LinearLayoutManager(this.context);
         mBinding.list.adapter = mAdapter
         mViewModel.getFiveRecords().subscribe { t1, t2 ->
@@ -36,7 +41,6 @@ class RecordHomeFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeView
             }
         }
         mViewModel.getMonthSpending();
-
     }
 
     override fun getViewModel(): RecordHomeViewmodel {
@@ -58,11 +62,19 @@ class RecordHomeFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeView
             return R.layout.item_record;
         }
 
-        fun refresh(list: ArrayList<Record>) {
+        fun refresh(list: MutableList<Record>) {
             dataList.clear();
             dataList.addAll(list)
             notifyDataSetChanged();
         }
 
+    }
+
+    override fun onClick(v: View?) {
+        when(v!!.id) {
+            R.id.click_2_add, R.id.bookkeeping -> (activity as HomeActivity).showBookkeepingFragment();
+            R.id.arrow -> (parentFragment as RecordFragment).showRecordListFragment()
+
+        }
     }
 }

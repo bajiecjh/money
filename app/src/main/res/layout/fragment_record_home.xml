@@ -72,7 +72,7 @@
         app:layout_constraintTop_toBottomOf="@id/balance"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/filter"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="5dp"
         android:background="@drawable/record_action_bg"
         android:layout_marginTop="20dp"
         android:paddingTop="15dp"
@@ -85,7 +85,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:src="@drawable/icon_statistics"
-            android:layout_marginLeft="20dp"/>
+            android:layout_marginLeft="10dp"/>
         <TextView
             android:id="@+id/text3"
             android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/img1"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:text="统计"
             android:textSize="18sp"
             android:textColor="@color/white"/>
@@ -106,8 +106,9 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintTop_toBottomOf="@id/balance"
         app:layout_constraintLeft_toRightOf="@id/statistics"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/bookkeeping"
         android:background="@drawable/record_action_bg"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="20dp"
         android:paddingTop="15dp"
         android:paddingBottom="15dp">
@@ -118,7 +119,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/icon_filtter"/>
         <TextView
             android:id="@+id/text4"
@@ -127,11 +128,47 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/img2"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:text="筛选"
             android:textSize="18sp"
             android:textColor="@color/white"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bookkeeping"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintTop_toBottomOf="@id/balance"
+        app:layout_constraintLeft_toRightOf="@id/filter"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/record_action_bg"
+        android:layout_marginTop="20dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
+        <ImageView
+            android:id="@+id/img3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/icon_bookkeeping"/>
+        <TextView
+            android:id="@+id/text5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/img3"
+            android:layout_marginLeft="10dp"
+            android:text="记账"
+            android:textSize="18sp"
+            android:textColor="@color/white"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
@@ -149,7 +186,21 @@
         app:layout_constraintTop_toBottomOf="@+id/list"
         app:layout_constraintBottom_toBottomOf="parent"
         android:src="@drawable/icon_arrow_top"
-        android:rotation="90"/>
+        android:rotation="90"
+        android:visibility="@{vm.fiveRecords.empty?View.GONE:View.VISIBLE}"/>
+
+    <TextView
+        android:id="@+id/click_2_add"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintTop_toBottomOf="@id/filter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="@{vm.fiveRecords.empty?View.VISIBLE:View.GONE}"
+        android:text="没有任何记录，点击添加"
+        android:textSize="16dp"
+        android:textColor="@color/font_color_gray"
+        android:gravity="center"/>
 
 
 

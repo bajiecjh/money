@@ -11,7 +11,7 @@ import com.bajie.money.model.data.BottomTabData
  */
 class HomeViewmodel : ViewModel() {
 //    var testNum = 0;
-    var currentIndex = 0;
+    var currentIndex = -1;
     val bottomTabData = List<BottomTabData>(4) { i: Int ->
         when (i) {
             0 -> BottomTabData("账本", R.drawable.icon_tab_hat, R.drawable.icon_tab_hat_unselected, true);

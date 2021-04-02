@@ -40,10 +40,15 @@ class HomeActivity: BaseActivity<ActivityHomeBinding, HomeViewmodel>(), View.OnC
     }
 
     private fun showFragment1() {
-        showFragment(recordFragment);
+        if(mViewModel.changeTabSelected(0)) {
+            showFragment(recordFragment);
+        }
     }
-    private fun showFragment2() {
-        showFragment(bookkeepingFragment);
+    public fun showBookkeepingFragment() {
+        if(mViewModel.changeTabSelected(1)) {
+            showFragment(bookkeepingFragment);
+        }
+
     }
     private fun showFragment3() {
         if(!::fragment3.isInitialized) {
@@ -95,14 +100,10 @@ class HomeActivity: BaseActivity<ActivityHomeBinding, HomeViewmodel>(), View.OnC
         val id = v?.id;
         when(id) {
             R.id.tab1 -> {
-                if(mViewModel.changeTabSelected(0)) {
-                    showFragment1();
-                }
+                showFragment1();
             }
             R.id.tab2 -> {
-                if(mViewModel.changeTabSelected(1)) {
-                    showFragment2();
-                }
+                showBookkeepingFragment();
             }
             R.id.tab3 -> {
                 if(mViewModel.changeTabSelected(2)) {
