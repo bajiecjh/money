@@ -23,10 +23,8 @@ import com.bajie.money.view.BaseViewHolder
 import com.bajie.money.view.activity.CategoryActivity
 import com.bajie.money.view.activity.TimePickerActivity
 import com.bajie.money.viewmodel.BookkeepingChildViewmodel
-import com.bajie.money.viewmodel.ViewModelFactoryBookkeepingChild
+import com.bajie.money.viewmodel.SharedViewModel
 import com.bajie.money.viewmodel.ViewModelFactoryWCategoryRecord
-import io.reactivex.functions.Action
-import io.reactivex.functions.Consumer
 
 /**
 
@@ -35,6 +33,11 @@ import io.reactivex.functions.Consumer
  */
 class BookkeepingOutFragment(val type: Int) : BaseFragment<FragmentBookkeepingChildBinding, BookkeepingChildViewmodel>(), View.OnClickListener,
     TextView.OnEditorActionListener {
+
+    val shareDataViewModel: SharedViewModel by lazy {
+        ViewModelProvider(activity!!).get(SharedViewModel::class.java);
+    }
+
     private val mCommonlyAdapter: CommonlyAdapter by lazy {
         CommonlyAdapter(this!!.context!!);
     }
@@ -49,7 +52,6 @@ class BookkeepingOutFragment(val type: Int) : BaseFragment<FragmentBookkeepingCh
     }
 
     override fun init() {
-
         mViewModel.init(type);
         mViewModel.category.observe(this,
             Observer<Category> { t ->
@@ -112,13 +114,17 @@ class BookkeepingOutFragment(val type: Int) : BaseFragment<FragmentBookkeepingCh
             return
         }
         mViewModel.addRecord(price.toFloat(), mBinding.hint.text.toString())
-            .subscribe(
-                Action {
+            .subscribe { t1, t2 ->
+                t2?.let {
+                    showToast("添加失败")
+                }
+                t1?.let {
                     showToast("添加成功")
                     mBinding.priceEdit.setText("");
                     mBinding.hint.setText("");
-                },
-                Consumer<Throwable> { showToast("添加失败")})
+                    shareDataViewModel.setAddedCategory(it);
+                }
+            }
     }
 
     inner class CommonlyAdapter(context: Context) : BaseRecyclerViewAdapter<ItemCommonlyBinding>(context){

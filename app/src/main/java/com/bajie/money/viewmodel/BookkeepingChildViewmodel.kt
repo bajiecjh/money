@@ -8,7 +8,6 @@ import com.bajie.money.model.data.Category
 import com.bajie.money.model.data.Record
 import com.bajie.money.utils.Canstant
 import com.bajie.money.utils.TimeUtils
-import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -129,18 +128,37 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
     }
 
 
-    fun addRecord(price:Float, hint:String): Completable {
-        return Completable.create{  emitter ->
+    fun addRecord(price:Float, hint:String): Single<Record> {
+        val time: Long = if(recordTime.value.equals("此刻")) TimeUtils.getTimeString() else TimeUtils.dateToStamp(recordTime.value!!);
+        return if(isOutType()) addOutRecord(price, hint, time) else addInRecord(price, hint, time)
+    }
+
+    private fun addInRecord(price: Float, hint: String, time: Long): Single<Record> {
+        return Single.create { emitter ->
+            val record = Record(price, category.value!!.id, hint, time, category.value!!.name, "", type);
+            recordDao.add(record)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { id, _ ->
+                    record.id = id.toInt();
+                    emitter.onSuccess(record)
+                }
+        }
+    }
+
+    private fun addOutRecord(price:Float, hint:String, time: Long): Single<Record> {
+        return Single.create{  emitter ->
             local.getCategoryById(category.value!!.parentId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe { t1, t2 ->
-                    t1?.let {
-                        val time: Long = if(recordTime.value.equals("此刻")) TimeUtils.getTimeString() else TimeUtils.dateToStamp(recordTime.value!!);
-                        val record = Record(price, category.value!!.id, hint, time, category.value!!.name, t1.name, type);
+                .subscribe { parentCategory, t2 ->
+                    parentCategory?.let {parentCategory ->
+
+                        val record = Record(price, category.value!!.id, hint, time, category.value!!.name, parentCategory.name, type);
                         recordDao.add(record)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe {
-                                emitter.onComplete();
+                            .subscribe {id, _ ->
+                                record.id = id.toInt();
+                                emitter.onSuccess(record)
                             }
                     }
                     t2?.let {
@@ -149,6 +167,7 @@ class BookkeepingChildViewmodel constructor(val local: CategoryDao, val recordDa
                 }
         }
     }
+
 
 
 

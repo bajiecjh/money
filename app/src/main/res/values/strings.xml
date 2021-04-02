@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">money</string>
+    <string name="month_in">本月收入：</string>
+    <string name="month_balance">本月差额：</string>
+    <string name="left_parenthesis">(</string>
+    <string name="right_parenthesis">)</string>
 </resources>

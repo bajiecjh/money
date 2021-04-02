@@ -36,33 +36,71 @@
         android:layout_marginTop="20dp"
         android:textStyle="bold"
         android:text="@{String.valueOf(vm.monthSpending)}"/>
-
-    <TextView
+    <LinearLayout
         android:id="@+id/in"
         android:layout_width="0dp"
-        app:layout_constraintHorizontal_weight="1"
-        android:gravity="center"
         android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintTop_toBottomOf="@id/out"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:text="本月收入：1000"
-        android:textColor="@color/font_color_black"
-        android:textSize="16sp"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintRight_toLeftOf="@id/balance"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/month_in"
+            android:textColor="@color/font_color_black"
+            android:textSize="16sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text='@{String.valueOf(vm.monthIn) }'
+            android:textColor="@color/price_green"
+            android:textStyle="bold"
+            android:textSize="17sp"/>
+    </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/balance"
         android:layout_width="0dp"
-        app:layout_constraintHorizontal_weight="1"
-        android:gravity="center"
         android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintTop_toBottomOf="@id/out"
         app:layout_constraintLeft_toRightOf="@id/in"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:text="本月差额：+500"
-        android:textColor="@color/font_color_black"
-        android:textSize="16sp"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/month_balance"
+            android:textColor="@color/font_color_black"
+            android:textSize="16sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text='+'
+            android:textColor="@color/price_green"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:visibility="@{vm.balance > 0 ? View.VISIBLE : View.GONE}"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text='@{String.valueOf(vm.balance) }'
+            android:textColor="@{vm.balance >= 0 ? @color/price_green : @color/price_yellow}"
+            android:textStyle="bold"
+            android:textSize="17sp"/>
+    </LinearLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/statistics"

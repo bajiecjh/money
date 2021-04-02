@@ -1,6 +1,7 @@
 package com.bajie.money.view.fragment
 
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bajie.money.BR
@@ -12,6 +13,7 @@ import com.bajie.money.view.BaseRecyclerViewAdapter
 import com.bajie.money.view.BaseViewHolder
 import com.bajie.money.view.activity.HomeActivity
 import com.bajie.money.viewmodel.RecordHomeViewmodel
+import com.bajie.money.viewmodel.SharedViewModel
 import com.bajie.money.viewmodel.ViewModelFactoryWRecord
 
 /**
@@ -19,6 +21,10 @@ import com.bajie.money.viewmodel.ViewModelFactoryWRecord
  */
 class RecordHomeFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeViewmodel>(),
     View.OnClickListener {
+
+    val shareDataViewModel: SharedViewModel by lazy {
+        ViewModelProvider(activity!!).get(SharedViewModel::class.java);
+    }
     private val mAdapter: MyAdapter by lazy {
         MyAdapter();
     }
@@ -35,12 +41,20 @@ class RecordHomeFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeView
 
         mBinding.list.layoutManager = LinearLayoutManager(this.context);
         mBinding.list.adapter = mAdapter
-        mViewModel.getFiveRecords().subscribe { t1, t2 ->
+        mViewModel.getFiveRecords().subscribe { t1, _ ->
             t1?.let {
                 mAdapter.refresh(t1!!);
             }
         }
         mViewModel.getMonthSpending();
+        mViewModel.getMonthIn()
+
+        shareDataViewModel.addedRecord.observe(viewLifecycleOwner, Observer<Record> {record ->
+            mViewModel.addNewRecord(record).subscribe { t1, _ ->
+                mAdapter.refresh(t1)
+            }
+        })
+
     }
 
     override fun getViewModel(): RecordHomeViewmodel {
@@ -74,7 +88,6 @@ class RecordHomeFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeView
         when(v!!.id) {
             R.id.click_2_add, R.id.bookkeeping -> (activity as HomeActivity).showBookkeepingFragment();
             R.id.arrow -> (parentFragment as RecordFragment).showRecordListFragment()
-
         }
     }
 }

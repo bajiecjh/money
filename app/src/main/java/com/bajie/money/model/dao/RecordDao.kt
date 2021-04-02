@@ -16,11 +16,17 @@ import io.reactivex.Single
 @Dao
 interface RecordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(record: Record): Completable
+    fun add(record: Record): Single<Long>
 
     @Query("SELECT * FROM record ORDER BY time DESC LIMIT 4")
     fun getFiveRecords(): Single<List<Record>>;
 
     @Query("SELECT * FROM record WHERE time >= :start AND time < :end ORDER BY time")
     fun getByTimeRange(start: Long, end: Long): Single<List<Record>>;
+
+    @Query("SELECT SUM(price) FROM record WHERE time >= :start AND time < :end AND type = 0 ORDER BY time")
+    fun getSumOutByTimeRange(start: Long, end: Long): Single<Float>
+
+    @Query("SELECT SUM(price) FROM record WHERE time >= :start AND time < :end AND type = 1 ORDER BY time")
+    fun getSumInByTimeRange(start: Long, end: Long): Single<Float>
 }
