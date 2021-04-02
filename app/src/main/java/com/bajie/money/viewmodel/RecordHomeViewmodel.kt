@@ -21,7 +21,7 @@ class RecordHomeViewmodel(val local: RecordDao) : ViewModel() {
     val fiveRecords  = MutableLiveData<ArrayList<Record>>(ArrayList<Record>());
     val monthSpending = MutableLiveData<Float>(0.0f);
 
-    @RequiresApi(Build.VERSION_CODES.N)
+
     fun getMonthSpending() {
         var params = TimeUtils.getFirstLastDayOfMonth();
         local.getByTimeRange(params.a, params.b)
@@ -29,7 +29,8 @@ class RecordHomeViewmodel(val local: RecordDao) : ViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {t1, t2 ->
                 t1?.let{ it ->
-                    monthSpending.value = it.stream().mapToDouble {it.price.toDouble()}.sum().toFloat();
+//                    monthSpending.value = it.stream().mapToDouble {it.price.toDouble()}.sum().toFloat();
+                    monthSpending.value = it.sumByDouble { it.price.toDouble() }.toFloat()
                 }
             }
     }

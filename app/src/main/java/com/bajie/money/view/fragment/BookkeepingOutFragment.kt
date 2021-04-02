@@ -61,6 +61,7 @@ class BookkeepingOutFragment(val type: Int) : BaseFragment<FragmentBookkeepingCh
                     mBinding.save.setOnClickListener(this);
                     mBinding.time.setOnClickListener(this);
                     mBinding.priceEdit.setOnEditorActionListener(this)
+                    mBinding.hint.setOnEditorActionListener(this)
                     SoftInputUtil.showSoftInput(mBinding.priceEdit);
                 } else {
                     mBinding.noCategory.setOnClickListener(this@BookkeepingOutFragment);
@@ -98,23 +99,25 @@ class BookkeepingOutFragment(val type: Int) : BaseFragment<FragmentBookkeepingCh
         when(v?.id) {
             R.id.category,R.id.noCategory, R.id.no_commonly, R.id.more -> CategoryActivity.startForResult(this, mViewModel.type,REQUEST_CODE_EDIT_CATEGORY);
             R.id.set_as_commonly -> mViewModel.setCategoryAsCommonly();
-            R.id.save -> {
-                val price = mBinding.priceEdit.text.toString()
-                if(price.isEmpty()) {
-                    showToast("请输入一个有效金额");
-                    return
-                }
-                mViewModel.addRecord(price.toFloat(), mBinding.hint.text.toString())
-                    .subscribe(
-                        Action {
-                            showToast("添加成功")
-                            mBinding.priceEdit.setText("");
-                            mBinding.hint.setText("");
-                        },
-                        Consumer<Throwable> { showToast("添加失败")})
-            };
+            R.id.save -> onSave();
             R.id.time -> TimePickerActivity.startForResult(this, REQUEST_CODE_TIME_PICKER, mViewModel.recordTime.value!!);
         }
+    }
+
+    private fun onSave() {
+        val price = mBinding.priceEdit.text.toString()
+        if(price.isEmpty()) {
+            showToast("请输入一个有效金额");
+            return
+        }
+        mViewModel.addRecord(price.toFloat(), mBinding.hint.text.toString())
+            .subscribe(
+                Action {
+                    showToast("添加成功")
+                    mBinding.priceEdit.setText("");
+                    mBinding.hint.setText("");
+                },
+                Consumer<Throwable> { showToast("添加失败")})
     }
 
     inner class CommonlyAdapter(context: Context) : BaseRecyclerViewAdapter<ItemCommonlyBinding>(context){
@@ -162,8 +165,10 @@ class BookkeepingOutFragment(val type: Int) : BaseFragment<FragmentBookkeepingCh
     }
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        if(actionId == EditorInfo.IME_ACTION_DONE) {
-            showToast("完成")
+        if(actionId == EditorInfo.IME_ACTION_NEXT) {
+            mBinding.hint.requestFocus();
+        } else if(actionId == EditorInfo.IME_ACTION_GO) {
+            onSave();
         }
         return true;
     }

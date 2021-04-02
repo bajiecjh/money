@@ -115,11 +115,11 @@
             android:textSize="30dp"
             android:textStyle="bold"
             android:gravity="center"
-            android:inputType="text"
+            android:inputType="number"
             android:background="@null"
             android:focusableInTouchMode="true"
             android:focusable="true"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:singleLine="true"/>
 
         <LinearLayout
@@ -218,8 +218,7 @@
             android:layout_marginTop="20dp"
             android:textSize="14dp"
             android:hint="备注"
-            android:imeOptions="actionDone"
-            android:inputType="text" />
+            android:imeOptions="actionGo" />
 
 
         <TextView
