@@ -29,4 +29,9 @@ interface RecordDao {
 
     @Query("SELECT SUM(price) FROM record WHERE time >= :start AND time < :end AND type = 1 ORDER BY time")
     fun getSumInByTimeRange(start: Long, end: Long): Single<Float>
+
+    @Query("SELECT MIN(time) FROM record")
+    fun getEarliest(): Single<Long>
+
+
 }

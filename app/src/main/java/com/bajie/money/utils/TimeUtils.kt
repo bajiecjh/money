@@ -44,15 +44,21 @@ class TimeUtils {
         // 获取年月日时分
         fun getFiveParams(dateStr: String): FiveParams<Int, Int, Int, Int, Int> {
             var dateFormat = SimpleDateFormat();
-            val date = dateFormat.parse(dateStr);
+            val date: Date = dateFormat.parse(dateStr);
             val calendar = Calendar.getInstance();
             calendar.time = date;
-            return FiveParams(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+            return FiveParams(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
         }
 
-        fun getFirstLastDayOfMonth(): TwoParams<Long, Long> {
+        fun getFirstLastDayOfMonth(year: Int = 0, month: Int = 0): TwoParams<Long, Long> {
             val calendar = Calendar.getInstance();
             calendar.time = Date();
+
+            if(year > 0 && month > 0) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month - 1);
+            }
+
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.set(Calendar.HOUR_OF_DAY, 0)
             calendar.set(Calendar.MINUTE, 0)
@@ -65,7 +71,6 @@ class TimeUtils {
             calendar.set(Calendar.SECOND, 59)
             val last = calendar.time.time;
             return TwoParams(first, last);
-
         }
 
 

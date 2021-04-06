@@ -40,9 +40,9 @@ class TimePickerActivity: BaseActivity<ActivityTimePickerBinding, TimePickerView
 
     private fun initPicker() {
         var data = intent.getStringExtra(Canstant.INTENT_DATA);
-        if(!data.equals("")) {
+        if(data != "") {
             val five = TimeUtils.getFiveParams(data);
-            mBinding.datePicker.init(five.a, five.b, five.c, null);
+            mBinding.datePicker.init(five.a, five.b - 1, five.c, null);
             mBinding.timePicker.currentHour = five.d;
             mBinding.timePicker.currentMinute = five.e;
         }
