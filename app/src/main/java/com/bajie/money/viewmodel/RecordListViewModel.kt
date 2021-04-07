@@ -21,9 +21,8 @@ class RecordListViewModel(private val recordDao: RecordDao): ViewModel() {
     val isShowLoading = MutableLiveData<Int>(View.GONE);
     val isLoadMonthRecordFinished = MutableLiveData<Boolean>(false);
     val monthRecords = ArrayList<MonthRecord>();
-    val monthRecord: MonthRecord by lazy {
-        MonthRecord();
-    }
+    lateinit var monthRecord: MonthRecord
+    var maxPrice = 0.0f;   // 每个月支出/收入中最大一笔，用户条形报表百分比显示
 
     fun init() {
         isLoadMonthRecordFinished.value = false;
@@ -45,12 +44,15 @@ class RecordListViewModel(private val recordDao: RecordDao): ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {t1, _ ->
+                monthRecord = MonthRecord();
                 monthRecord.year = year;
                 monthRecord.month = month;
                 for(item in t1) {
                     if(item.type == Canstant.IN_TYPE) monthRecord.income += item.price;
                     else monthRecord.outlay += item.price
                 }
+                if(monthRecord.income > maxPrice) maxPrice = monthRecord.income
+                if(monthRecord.outlay > maxPrice) maxPrice = monthRecord.outlay
                 monthRecord.records = t1 as java.util.ArrayList<Record>;
                 monthRecords.add(monthRecord);
                 if(year == endDate.a && month == endDate.b) {
