@@ -1,6 +1,7 @@
 package com.bajie.money.view.activity
 
 
+import android.view.MotionEvent
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -8,7 +9,7 @@ import com.bajie.money.R
 import com.bajie.money.databinding.ActivityHomeBinding
 import com.bajie.money.view.fragment.BookkeepingFragment
 import com.bajie.money.view.fragment.HomeFragment
-import com.bajie.money.view.fragment.RecordFragment
+import com.bajie.money.view.fragment.RecordHomeFragment
 import com.bajie.money.viewmodel.HomeViewmodel
 
 /**
@@ -18,14 +19,18 @@ import com.bajie.money.viewmodel.HomeViewmodel
  */
 class HomeActivity: BaseActivity<ActivityHomeBinding, HomeViewmodel>(), View.OnClickListener {
 
-    private val recordFragment: RecordFragment by lazy {
-        RecordFragment()
+    private val recordFragment: RecordHomeFragment by lazy {
+        RecordHomeFragment()
     };
     private val bookkeepingFragment: BookkeepingFragment by lazy {
         BookkeepingFragment();
     };
     private lateinit var fragment3: HomeFragment;
     private lateinit var fragment4: HomeFragment;
+    private val onTouchListeners: ArrayList<MyOnTouchListener> by lazy {
+        ArrayList<MyOnTouchListener>(10);
+    }
+
 
     override fun getLayout(): Int {
         return R.layout.activity_home;
@@ -122,5 +127,9 @@ class HomeActivity: BaseActivity<ActivityHomeBinding, HomeViewmodel>(), View.OnC
         return ViewModelProvider(this).get(HomeViewmodel::class.java);
     }
 
+
+    public interface MyOnTouchListener {
+        fun onTouch(event: MotionEvent): Boolean;
+    }
 
 }

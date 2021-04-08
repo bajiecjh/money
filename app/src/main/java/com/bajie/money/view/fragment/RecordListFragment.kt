@@ -13,7 +13,9 @@ import com.bajie.money.BR
 import com.bajie.money.R
 import com.bajie.money.databinding.*
 import com.bajie.money.model.data.MonthRecord
+import com.bajie.money.view.BaseRecyclerViewAdapter
 import com.bajie.money.view.BaseViewHolder
+import com.bajie.money.view.activity.CategoryActivity
 import com.bajie.money.viewmodel.RecordListViewModel
 import com.bajie.money.viewmodel.ViewModelFactoryWRecord
 
@@ -30,6 +32,7 @@ class RecordListFragment: BaseFragment<FragmentRecordListBinding, RecordListView
     }
 
     override fun init() {
+        CategoryActivity.startForResult(this, 0, 100);
         mViewModel.init();
         mViewModel.isLoadMonthRecordFinished.observe(this,  Observer<Boolean> {newValue ->
             if(newValue) {
@@ -44,11 +47,24 @@ class RecordListFragment: BaseFragment<FragmentRecordListBinding, RecordListView
         return ViewModelProvider(this, ViewModelFactoryWRecord(this.activity!!.application)).get(RecordListViewModel::class.java);
     }
 
+    inner class MyAdapter: BaseRecyclerViewAdapter<ItemRecordSubBinding>(context!!) {
+        override fun getItemCount(): Int {
+           return 100
+        }
 
+        override fun onBindViewHolder(holder: BaseViewHolder<ItemRecordSubBinding>, position: Int) {
+            holder.binding.setVariable(BR.txt, position.toString())
+        }
+
+        override fun getLayout(): Int {
+            return R.layout.item_record_sub
+        }
+
+    }
 
     inner class MAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         lateinit var mData: ArrayList<MonthRecord>
-        var mCurrentOpenGroupIndex = -1;    // 一次只能展开一项
+        var mCurrentOpenGroupIndex = 0;    // 一次只能展开一项
         private val mLayoutInflater: LayoutInflater = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -89,6 +105,7 @@ class RecordListFragment: BaseFragment<FragmentRecordListBinding, RecordListView
                 val newHolder = holder as BaseViewHolder<ItemRecordHeaderBinding>;
                 newHolder.binding.setVariable(BR.monthRecord, monthRecord)
                 newHolder.binding.setVariable(BR.balance, monthRecord.income - monthRecord.outlay)
+                newHolder.binding.setVariable(BR.isOpen, mCurrentOpenGroupIndex>=0&&mCurrentOpenGroupIndex == itemStatus.groupItemIndex)
                 newHolder.binding.reference.measure(0, 0);
                 newHolder.binding.reference.post {
                     val maxWidth = newHolder.binding.reference.measuredWidth;

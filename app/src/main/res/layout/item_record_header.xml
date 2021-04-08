@@ -130,7 +130,7 @@
         android:src="@drawable/icon_arrow_top"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:rotation="180"/>
+        android:rotation="@{isOpen?270:180}"/>
 
     <View
         android:layout_width="match_parent"

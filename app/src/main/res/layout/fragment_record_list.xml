@@ -30,8 +30,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        bind:layout_constraintVertical_weight="1"
+        android:layout_height="wrap_content"
         bind:layout_constraintTop_toBottomOf="@id/header"
         bind:layout_constraintLeft_toLeftOf="parent"/>
 
