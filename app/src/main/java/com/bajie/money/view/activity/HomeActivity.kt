@@ -9,7 +9,7 @@ import com.bajie.money.R
 import com.bajie.money.databinding.ActivityHomeBinding
 import com.bajie.money.view.fragment.BookkeepingFragment
 import com.bajie.money.view.fragment.HomeFragment
-import com.bajie.money.view.fragment.RecordHomeFragment
+import com.bajie.money.view.fragment.RecordFragment
 import com.bajie.money.viewmodel.HomeViewmodel
 
 /**
@@ -19,8 +19,8 @@ import com.bajie.money.viewmodel.HomeViewmodel
  */
 class HomeActivity: BaseActivity<ActivityHomeBinding, HomeViewmodel>(), View.OnClickListener {
 
-    private val recordFragment: RecordHomeFragment by lazy {
-        RecordHomeFragment()
+    private val recordFragment: RecordFragment by lazy {
+        RecordFragment()
     };
     private val bookkeepingFragment: BookkeepingFragment by lazy {
         BookkeepingFragment();

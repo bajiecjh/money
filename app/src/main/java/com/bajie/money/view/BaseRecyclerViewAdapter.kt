@@ -15,16 +15,16 @@ import androidx.recyclerview.widget.RecyclerView
 
 open abstract class BaseRecyclerViewAdapter<T: ViewDataBinding>(context: Context): RecyclerView.Adapter<BaseViewHolder<T>>() {
 
-
-
     private val mLayoutInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<T> {
-        val binding: T = DataBindingUtil.inflate(mLayoutInflater, getLayout(), parent, false);
+        val layout = getLayout(viewType);
+        val binding: T = DataBindingUtil.inflate(mLayoutInflater, getLayout(viewType), parent, false);
         return BaseViewHolder(binding);
     }
 
     abstract override fun getItemCount(): Int;
 
     abstract override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int);
-    abstract fun getLayout(): Int;
+    abstract fun getLayout(viewType: Int): Int;
 }

@@ -128,7 +128,7 @@ class BookkeepingOutFragment(val type: Int) : BaseFragment<FragmentBookkeepingCh
     }
 
     inner class CommonlyAdapter(context: Context) : BaseRecyclerViewAdapter<ItemCommonlyBinding>(context){
-        override fun getLayout(): Int {
+        override fun getLayout(viewType: Int): Int {
             return R.layout.item_commonly;
         }
 

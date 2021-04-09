@@ -56,7 +56,7 @@ class RecordListFragment: BaseFragment<FragmentRecordListBinding, RecordListView
             holder.binding.setVariable(BR.txt, position.toString())
         }
 
-        override fun getLayout(): Int {
+        override fun getLayout(viewType: Int): Int {
             return R.layout.item_record_sub
         }
 
