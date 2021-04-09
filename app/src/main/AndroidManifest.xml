@@ -23,6 +23,7 @@
         <activity android:name=".view.activity.EditCategoryActivity"/>
         <activity android:name=".view.activity.ParentCategoryListActivity"/>
         <activity android:name=".view.activity.TimePickerActivity"/>
+        <activity android:name=".view.activity.RecordListActivity"/>
     </application>
 
 </manifest>

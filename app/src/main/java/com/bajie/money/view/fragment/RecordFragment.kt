@@ -12,8 +12,8 @@ import com.bajie.money.databinding.FragmentRecordHomeHeaderBinding
 import com.bajie.money.model.data.Record
 import com.bajie.money.view.BaseRecyclerViewAdapter
 import com.bajie.money.view.BaseViewHolder
-import com.bajie.money.view.activity.CategoryActivity
 import com.bajie.money.view.activity.HomeActivity
+import com.bajie.money.view.activity.RecordListActivity
 import com.bajie.money.view.widget.EndlessRecyclerOnScrollListener
 import com.bajie.money.viewmodel.RecordHomeViewmodel
 import com.bajie.money.viewmodel.SharedViewModel
@@ -45,7 +45,7 @@ class RecordFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeViewmode
         mBinding.list.adapter = mAdapter
         mBinding.list.addOnScrollListener(object : EndlessRecyclerOnScrollListener(){
             override fun scrollToEnd() {
-                CategoryActivity.startForResult(this@RecordFragment, 0, 100);
+                RecordListActivity.start(this@RecordFragment.context!!)
             }
         })
 
@@ -123,7 +123,7 @@ class RecordFragment: BaseFragment<FragmentRecordHomeBinding, RecordHomeViewmode
     override fun onClick(v: View?) {
         when(v!!.id) {
             R.id.click_2_add, R.id.bookkeeping -> (activity as HomeActivity).showBookkeepingFragment();
-            R.id.arrow ->  CategoryActivity.startForResult(this@RecordFragment, 0, 100);
+            R.id.arrow -> RecordListActivity.start(this.context!!)
         }
     }
 }

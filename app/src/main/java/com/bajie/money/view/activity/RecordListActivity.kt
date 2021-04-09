@@ -1,9 +1,11 @@
-package com.bajie.money.view.fragment
+package com.bajie.money.view.activity
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,32 +13,41 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bajie.money.BR
 import com.bajie.money.R
-import com.bajie.money.databinding.*
+import com.bajie.money.databinding.ActivityRecordListBinding
+import com.bajie.money.databinding.ItemRecordHeaderBinding
+import com.bajie.money.databinding.ItemRecordSubBinding
 import com.bajie.money.model.data.MonthRecord
 import com.bajie.money.view.BaseRecyclerViewAdapter
 import com.bajie.money.view.BaseViewHolder
-import com.bajie.money.view.activity.CategoryActivity
+import com.bajie.money.view.fragment.ItemStatus
 import com.bajie.money.viewmodel.RecordListViewModel
 import com.bajie.money.viewmodel.ViewModelFactoryWRecord
 
 /**
 
- * bajie on 2021/3/29 15:43
+ * bajie on 2021/4/9 16:15
 
  */
-class RecordListFragment: BaseFragment<ActivityRecordListBinding, RecordListViewModel>() {
+class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListViewModel>() {
+
+    companion object {
+        fun start(context: Context) {
+            val intent = Intent(context, RecordListActivity::class.java);
+            context.startActivity(intent);
+        }
+    }
+
     private val mAdapter: MAdapter by lazy { MAdapter() }
 
     override fun getLayout(): Int {
-        return 0
+        return R.layout.activity_record_list
     }
 
     override fun init() {
-        CategoryActivity.startForResult(this, 0, 100);
         mViewModel.init();
         mViewModel.isLoadMonthRecordFinished.observe(this,  Observer<Boolean> {newValue ->
             if(newValue) {
-                mBinding.list.layoutManager = LinearLayoutManager(context);
+                mBinding.list.layoutManager = LinearLayoutManager(this);
                 mBinding.list.adapter = mAdapter;
                 mAdapter.setData(mViewModel.monthRecords);
             }
@@ -44,28 +55,12 @@ class RecordListFragment: BaseFragment<ActivityRecordListBinding, RecordListView
     }
 
     override fun getViewModel(): RecordListViewModel {
-        return ViewModelProvider(this, ViewModelFactoryWRecord(this.activity!!.application)).get(RecordListViewModel::class.java);
+        return ViewModelProvider(this, ViewModelFactoryWRecord(application)).get(RecordListViewModel::class.java);
     }
-
-    inner class MyAdapter: BaseRecyclerViewAdapter<ItemRecordSubBinding>(context!!) {
-        override fun getItemCount(): Int {
-           return 100
-        }
-
-        override fun onBindViewHolder(holder: BaseViewHolder<ItemRecordSubBinding>, position: Int) {
-            holder.binding.setVariable(BR.txt, position.toString())
-        }
-
-        override fun getLayout(viewType: Int): Int {
-            return R.layout.item_record_sub
-        }
-
-    }
-
-    inner class MAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    inner class MAdapter: BaseRecyclerViewAdapter<ViewDataBinding>() {
         lateinit var mData: ArrayList<MonthRecord>
         var mCurrentOpenGroupIndex = 0;    // 一次只能展开一项
-        private val mLayoutInflater: LayoutInflater = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
+        private val mLayoutInflater: LayoutInflater = this@RecordListActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             lateinit var binding: ViewBinding;
@@ -97,7 +92,11 @@ class RecordListFragment: BaseFragment<ActivityRecordListBinding, RecordListView
             return itemCount;
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
+        override fun onBindViewHolder(holder: BaseViewHolder<ViewDataBinding>, position: Int) {
+            TODO("Not yet implemented")
+        }
+        fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val itemStatus = getItemStatusByPosition(position);
 
             if(itemStatus.viewType == ItemStatus.VIEW_TYPE_GROUP_ITEM) {
@@ -163,15 +162,11 @@ class RecordListFragment: BaseFragment<ActivityRecordListBinding, RecordListView
             return itemStatus
 
         }
-    }
-}
 
-class ItemStatus() {
-    companion object {
-        const val VIEW_TYPE_GROUP_ITEM = 0;
-        const val VIEW_TYPE_SUB_ITEM = 1;
+
+
+        override fun getLayout(viewType: Int): Int {
+            TODO("Not yet implemented")
+        }
     }
-    var viewType = 0;
-    var groupItemIndex = 0;
-    var subItemIndex = 0;
 }
