@@ -2,6 +2,7 @@ package com.bajie.money.model.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.ArrayList
 
 /**
 
@@ -29,4 +30,20 @@ class Record {
         this.parentCategoryName = parentCategoryName
         this.type = type
     }
+}
+
+class MonthRecord {
+    var year: Int = 0;
+    var month: Int = 0;
+    var income: Float = 0.0f;
+    var outlay: Float = 0.0f;
+    var recordSize: Int = 0;
+    var dayRecords: HashMap<Int, DayRecord> = HashMap();
+//    var records: ArrayList<Record> = ArrayList();
+}
+
+class DayRecord {
+    var day: Int = 0;
+    var week: String = "";
+    var records: ArrayList<Record> = ArrayList();
 }

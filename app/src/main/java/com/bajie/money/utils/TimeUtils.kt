@@ -12,6 +12,7 @@ class TimeUtils {
 
     companion object {
         const val TIME_PATTERN = "yyyy/MM/dd HH:mm"
+        val weekDays = arrayOf("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
         // 获取当前时间
         fun getNowTime(pattern: String): String {
             val simpleDateFormat = SimpleDateFormat(pattern);
@@ -73,6 +74,14 @@ class TimeUtils {
             return TwoParams(first, last);
         }
 
-
+        fun getDayAndWeek(timestamp: Long): TwoParams<Int, String> {
+            val date = Date(timestamp);
+            val calendar = Calendar.getInstance();
+            calendar.time = date;
+            val day = calendar.get(Calendar.DAY_OF_MONTH);
+            var week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+            if(week < 0) week = 0;
+            return TwoParams(day, weekDays[week]);
+        }
     }
 }

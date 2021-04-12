@@ -4,8 +4,8 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bajie.money.model.dao.RecordDao
+import com.bajie.money.model.data.DayRecord
 import com.bajie.money.model.data.MonthRecord
-import com.bajie.money.model.data.Record
 import com.bajie.money.utils.Canstant
 import com.bajie.money.utils.FiveParams
 import com.bajie.money.utils.TimeUtils
@@ -43,17 +43,30 @@ class RecordListViewModel(private val recordDao: RecordDao): ViewModel() {
         recordDao.getByTimeRange(monthData.a, monthData.b)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {t1, _ ->
+            .subscribe {recordList, _ ->
                 monthRecord = MonthRecord();
                 monthRecord.year = year;
                 monthRecord.month = month;
-                for(item in t1) {
-                    if(item.type == Canstant.IN_TYPE) monthRecord.income += item.price;
-                    else monthRecord.outlay += item.price
+                monthRecord.recordSize = recordList.size;
+                for(record in recordList) {
+                    if(record.type == Canstant.IN_TYPE) monthRecord.income += record.price;
+                    else monthRecord.outlay += record.price
+
+                    val dayAndWeek = TimeUtils.getDayAndWeek(record.time);
+                    val dayRecords = monthRecord.dayRecords[dayAndWeek.a];
+                    if(dayRecords == null) {
+                        val dayRecord = DayRecord();
+                        dayRecord.day = dayAndWeek.a;
+                        dayRecord.week = dayAndWeek.b;
+                        dayRecord.records = ArrayList();
+                        dayRecord.records.add(record);
+                        monthRecord.dayRecords[dayAndWeek.a] = dayRecord;
+                    } else {
+                        dayRecords.records.add(0, record);
+                    }
                 }
                 if(monthRecord.income > maxPrice) maxPrice = monthRecord.income
                 if(monthRecord.outlay > maxPrice) maxPrice = monthRecord.outlay
-                monthRecord.records = t1 as java.util.ArrayList<Record>;
                 monthRecords.add(monthRecord);
                 if(year == endDate.a && month == endDate.b) {
                     isLoadMonthRecordFinished.value = true;
@@ -68,4 +81,7 @@ class RecordListViewModel(private val recordDao: RecordDao): ViewModel() {
 
             }
     }
+
+
+
 }

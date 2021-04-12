@@ -5,5 +5,6 @@
     <string name="left_parenthesis">(</string>
     <string name="right_parenthesis">)</string>
     <string name="income">收￥</string>
+    <string name="outlay">支￥</string>
     <string name="money_symbol">￥</string>
 </resources>

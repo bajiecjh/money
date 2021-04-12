@@ -84,7 +84,7 @@
         app:layout_constraintLeft_toRightOf="@id/year"
         android:textColor="@color/price_yellow"
         android:includeFontPadding="false"
-        android:text='@{@string/income + monthRecord.outlay, default=200}'/>
+        android:text='@{@string/outlay + monthRecord.outlay, default=200}'/>
 
     <View
         android:id="@+id/outlay_view"
@@ -122,8 +122,8 @@
 
     <ImageView
         android:id="@+id/arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
