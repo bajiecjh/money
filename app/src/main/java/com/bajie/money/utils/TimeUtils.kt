@@ -12,7 +12,7 @@ class TimeUtils {
 
     companion object {
         const val TIME_PATTERN = "yyyy/MM/dd HH:mm"
-        val weekDays = arrayOf("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
+        val weekDays = arrayOf("周日", "周一", "周二", "周三", "周四", "周五", "周六")
         // 获取当前时间
         fun getNowTime(pattern: String): String {
             val simpleDateFormat = SimpleDateFormat(pattern);

@@ -9,8 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bajie.money.BR
 import com.bajie.money.R
-import com.bajie.money.databinding.ActivityRecordListBinding
-import com.bajie.money.databinding.ItemRecordHeaderBinding
+import com.bajie.money.databinding.*
 import com.bajie.money.model.data.MonthRecord
 import com.bajie.money.view.BaseRecyclerViewAdapter
 import com.bajie.money.view.BaseViewHolder
@@ -53,32 +52,24 @@ class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListView
     }
     inner class MAdapter: BaseRecyclerViewAdapter<ViewDataBinding>(this) {
         lateinit var mData: ArrayList<MonthRecord>
-        var mCurrentOpenGroupIndex = 0;    // 一次只能展开一项
-        private val mLayoutInflater: LayoutInflater = this@RecordListActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
-
-//
+        private var mCurrentOpenGroupIndex = 0;    // 一次只能展开一项
+        private var mItemStatusList = ArrayList<ItemStatus>();
 
         override fun getItemViewType(position: Int): Int {
-            return if(mCurrentOpenGroupIndex < 0) {
-                ItemStatus.VIEW_TYPE_MONTH
-            } else if(position > mCurrentOpenGroupIndex && position <= mData[mCurrentOpenGroupIndex].recordSize + mCurrentOpenGroupIndex) {
-                ItemStatus.VIEW_TYPE_RECORD;
-            } else {
-                ItemStatus.VIEW_TYPE_MONTH
-            }
+            return mItemStatusList[position]!!.viewType;
         }
 
         override fun getItemCount(): Int {
             var itemCount = mData.size;
             if(mCurrentOpenGroupIndex >= 0) {
-                itemCount += mData[mCurrentOpenGroupIndex].recordSize
+                itemCount += mData[mCurrentOpenGroupIndex].recordSize + mData[mCurrentOpenGroupIndex].dayRecords.size
             }
             return itemCount;
         }
 
 
         override fun onBindViewHolder(holder: BaseViewHolder<ViewDataBinding>, position: Int) {
-            val itemStatus = getItemStatusByPosition(position);
+            val itemStatus = mItemStatusList[position];
 
             if(itemStatus.viewType == ItemStatus.VIEW_TYPE_MONTH) {
                 val monthRecord = mData[itemStatus.monthItemIndex];
@@ -98,7 +89,15 @@ class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListView
                     outlayLP.width = (outlay * maxWidth / mViewModel.maxPrice).toInt();
                     newHolder.binding.outlayView.layoutParams = outlayLP
                 }
-
+            } else if(itemStatus.viewType == ItemStatus.VIEW_TYPE_DAY) {
+                val dayRecord = mData[itemStatus.monthItemIndex].dayRecords[itemStatus.day];
+                val newHolder = holder as BaseViewHolder<ItemRecordDayBinding>;
+                newHolder.binding.setVariable(BR.record, dayRecord);
+            } else {
+                val record = mData[itemStatus.monthItemIndex].dayRecords[itemStatus.day]!!.records[itemStatus.recordItemIndex];
+                val newHolder = holder as BaseViewHolder<ItemRecordBinding>;
+                newHolder.binding.setVariable(BR.record, record);
+                newHolder.binding.setVariable(BR.setMargin, true);
             }
 
             holder.itemView.setOnClickListener{
@@ -111,7 +110,7 @@ class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListView
                         itemStatus.monthItemIndex;
                     }
                 }
-                notifyDataSetChanged();
+                refreshView();
             }
 
             holder.binding.executePendingBindings();
@@ -120,58 +119,83 @@ class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListView
         override fun getLayout(viewType: Int): Int {
             return when(viewType) {
                 ItemStatus.VIEW_TYPE_MONTH -> R.layout.item_record_header;
-                else -> R.layout.item_record_sub
+                ItemStatus.VIEW_TYPE_DAY -> R.layout.item_record_day;
+                else -> R.layout.item_record
             }
         }
 
-        public fun setData(data: ArrayList<MonthRecord>) {
+        open fun setData(data: ArrayList<MonthRecord>) {
             this.mData = data;
+            refreshView();
+        }
+
+
+        private fun refreshView() {
+            mItemStatusList.clear();
+            for (i in 0 until itemCount) {
+                mItemStatusList.add(ItemStatus());
+            }
+            setItemStatus()
             notifyDataSetChanged();
+
         }
 
-        private fun getItemStatusByPosition(position: Int): ItemStatus {
+        private fun addMonthItem(position: Int, monthIndex: Int) {
             val itemStatus = ItemStatus();
-            if(mCurrentOpenGroupIndex < 0) {    // 没有展开项，全部都是月记录
-                itemStatus.viewType = ItemStatus.VIEW_TYPE_MONTH;
-                itemStatus.monthItemIndex = position;
-                return itemStatus;
-            }
-            // 月记录
-            val subItemSize = mData[mCurrentOpenGroupIndex].recordSize + mData[mCurrentOpenGroupIndex].dayRecords.size
-            if(position <= mCurrentOpenGroupIndex && position > subItemSize  + mCurrentOpenGroupIndex) {
-                itemStatus.viewType = ItemStatus.VIEW_TYPE_MONTH;
-                itemStatus.monthItemIndex = if (position > mCurrentOpenGroupIndex) {
-                    position - subItemSize;
-                } else {
-                    position
-                }
-                return itemStatus;
-            }
-
-            // 日记录
-            for((index, item) in mData[mCurrentOpenGroupIndex].dayRecords) {
-                if(position == )
-            }
-
-
-
-            // 子项
-            if(position > mCurrentOpenGroupIndex && position <= mData[mCurrentOpenGroupIndex].recordSize + mCurrentOpenGroupIndex) {
-                itemStatus.viewType = ItemStatus.VIEW_TYPE_RECORD;
-                itemStatus.monthItemIndex = mCurrentOpenGroupIndex;
-                itemStatus.recordItemIndex = position - mCurrentOpenGroupIndex - 1;
-            } else {    // 组项
-                itemStatus.viewType = ItemStatus.VIEW_TYPE_MONTH;
-                // 如果组项位于展开项下面，groupItemIndex的值要减去 展开项的子项数
-                itemStatus.monthItemIndex = if(position<= mCurrentOpenGroupIndex) position else position - mData[mCurrentOpenGroupIndex].recordSize;
-            }
-            return itemStatus
-
+            itemStatus.viewType = ItemStatus.VIEW_TYPE_MONTH;
+            itemStatus.monthItemIndex = monthIndex;
+            mItemStatusList[position] = itemStatus;
         }
+        private fun setItemStatus() {
+            var itemStatus: ItemStatus;
+            // 无展开项,全部都是月记录
+            if(mCurrentOpenGroupIndex < 0) {
+                for(i in 0 until itemCount) {
+                    itemStatus = ItemStatus();
+                    itemStatus.viewType = ItemStatus.VIEW_TYPE_MONTH;
+                    itemStatus.monthItemIndex = i;
+                    mItemStatusList[i] = itemStatus;
+                }
+                return;
+            }
 
+            val openItem = mData[mCurrentOpenGroupIndex];
+            val dayOfMonth = openItem.dayRecords;
 
+            // 在展开项上面的月记录
+            for(i in 0..mCurrentOpenGroupIndex) {
+                addMonthItem(i , i);
+            }
+            val subItemSize = openItem.recordSize + dayOfMonth.size;
+            // 在展开项下面的月记录
+            for(i in (subItemSize + mCurrentOpenGroupIndex+1) until itemCount) {
+                addMonthItem(i, i-subItemSize)
+            }
 
+            var preRecordPosition = 0;
+            var dayIndex = 0;
+            for((day, dayRecords) in dayOfMonth) {
+                // 日记录
+                val dayPosition = mCurrentOpenGroupIndex + preRecordPosition +1;
+                itemStatus = ItemStatus();
+                itemStatus.viewType = ItemStatus.VIEW_TYPE_DAY;
+                itemStatus.monthItemIndex = mCurrentOpenGroupIndex;
+                itemStatus.day = day;
+                mItemStatusList[dayPosition] = itemStatus;
 
+                // 消费记录
+                for (i in dayPosition+1..dayPosition+dayRecords.records.size) {
+                    itemStatus = ItemStatus();
+                    itemStatus.viewType = ItemStatus.VIEW_TYPE_RECORD;
+                    itemStatus.monthItemIndex = mCurrentOpenGroupIndex;
+                    itemStatus.day = day;
+                    itemStatus.recordItemIndex = i - dayPosition - 1;
+                    mItemStatusList[i] = itemStatus;
+                }
+                dayIndex ++;
+                preRecordPosition += dayRecords.records.size + 1;
+            }
+        }
     }
 }
 class ItemStatus() {
@@ -182,6 +206,6 @@ class ItemStatus() {
     }
     var viewType = 0;
     var monthItemIndex = 0;
-    var dayItemIndex = 0;
+    var day = 0;
     var recordItemIndex = 0;
 }

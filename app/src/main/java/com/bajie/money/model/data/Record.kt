@@ -45,5 +45,7 @@ class MonthRecord {
 class DayRecord {
     var day: Int = 0;
     var week: String = "";
+    var income: Float = 0.0f;
+    var outlay: Float = 0.0f;
     var records: ArrayList<Record> = ArrayList();
 }

@@ -53,17 +53,19 @@ class RecordListViewModel(private val recordDao: RecordDao): ViewModel() {
                     else monthRecord.outlay += record.price
 
                     val dayAndWeek = TimeUtils.getDayAndWeek(record.time);
-                    val dayRecords = monthRecord.dayRecords[dayAndWeek.a];
+                    var dayRecords = monthRecord.dayRecords[dayAndWeek.a];
                     if(dayRecords == null) {
-                        val dayRecord = DayRecord();
-                        dayRecord.day = dayAndWeek.a;
-                        dayRecord.week = dayAndWeek.b;
-                        dayRecord.records = ArrayList();
-                        dayRecord.records.add(record);
-                        monthRecord.dayRecords[dayAndWeek.a] = dayRecord;
+                        dayRecords = DayRecord();
+                        dayRecords.day = dayAndWeek.a;
+                        dayRecords.week = dayAndWeek.b;
+                        dayRecords.records = ArrayList();
+                        dayRecords.records.add(record);
+                        monthRecord.dayRecords[dayAndWeek.a] = dayRecords;
                     } else {
                         dayRecords.records.add(0, record);
                     }
+                    if(record.type == Canstant.IN_TYPE) dayRecords.income += record.price;
+                    else dayRecords.outlay += record.price
                 }
                 if(monthRecord.income > maxPrice) maxPrice = monthRecord.income
                 if(monthRecord.outlay > maxPrice) maxPrice = monthRecord.outlay

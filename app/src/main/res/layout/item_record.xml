@@ -5,6 +5,9 @@
     <data>
         <import type="android.view.View"/>
         <variable
+            name="setMargin"
+            type="Boolean" />
+        <variable
             name="record"
             type="com.bajie.money.model.data.Record" />
         <import type="com.bajie.money.utils.TimeUtils"/>
@@ -22,7 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent">
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="@{setMargin?@dimen/margin_40dp:@dimen/margin_null}">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,7 +71,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:text="@{TimeUtils.stampToDate(record.time, TimeUtils.TIME_PATTERN)}"
         android:textColor="@color/font_color_gray"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:layout_marginLeft="@{setMargin?@dimen/margin_40dp:@dimen/margin_null}"/>
 
 
     <TextView
