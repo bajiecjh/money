@@ -44,7 +44,7 @@ class TimeUtils {
         }
         // 获取年月日时分
         fun getFiveParams(dateStr: String): FiveParams<Int, Int, Int, Int, Int> {
-            var dateFormat = SimpleDateFormat();
+            var dateFormat = SimpleDateFormat(TIME_PATTERN);
             val date: Date = dateFormat.parse(dateStr);
             val calendar = Calendar.getInstance();
             calendar.time = date;

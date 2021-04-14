@@ -45,7 +45,7 @@ class RecordHomeViewmodel(val local: RecordDao) : ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { t1, _ ->
-                t1.let {it ->
+                t1?.let {it ->
                     monthIn.value = it;
                     setBalance()
                 }

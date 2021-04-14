@@ -2,7 +2,8 @@ package com.bajie.money.view.activity
 
 import android.content.Context
 import android.content.Intent
-import android.view.LayoutInflater
+import android.os.Bundle
+import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +22,8 @@ import com.bajie.money.viewmodel.ViewModelFactoryWRecord
  * bajie on 2021/4/9 16:15
 
  */
-class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListViewModel>() {
+class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListViewModel>(),
+    View.OnClickListener {
 
     companion object {
         fun start(context: Context) {
@@ -36,7 +38,18 @@ class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListView
         return R.layout.activity_record_list
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+//        overridePendingTransition(R.anim.slide_in_bottom, R.anim.silent);
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun finish() {
+        super.finish()
+//        overridePendingTransition( R.anim.bottom_silent, R.anim.bottom_out);
+    }
     override fun init() {
+        mBinding.header.back.setOnClickListener(this);
+
         mViewModel.init();
         mViewModel.isLoadMonthRecordFinished.observe(this,  Observer<Boolean> {newValue ->
             if(newValue) {
@@ -45,6 +58,12 @@ class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListView
                 mAdapter.setData(mViewModel.monthRecords);
             }
         })
+    }
+
+    override fun onClick(v: View?) {
+        when(v!!.id) {
+            R.id.back -> finish();
+        }
     }
 
     override fun getViewModel(): RecordListViewModel {
