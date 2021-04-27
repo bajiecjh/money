@@ -24,23 +24,33 @@ abstract class EndlessRecyclerOnScrollListener: RecyclerView.OnScrollListener() 
             val itemCount = manager.itemCount;
 
             // 判断是否滑动到最后一个item
-            if(lastItemPosition >= (itemCount - 2)) {
-                // footer的高度
-                val footerView = manager.findViewByPosition(itemCount - 1)
-                val height = (footerView!!.layoutParams as RecyclerView.LayoutParams).height;
-                val rect = Rect();
-                footerView.getLocalVisibleRect(rect);
-                if(rect.bottom == height) {
+//            if(lastItemPosition >= (itemCount - 2) && totalDy > 0) {
+//                // footer的高度
+//                val footerView = manager.findViewByPosition(itemCount - 1)
+//                val height = (footerView!!.layoutParams as RecyclerView.LayoutParams).height;
+//                val rect = Rect();
+//                footerView.getLocalVisibleRect(rect);
 
+                if(totalDy > 300) {
+                    println("bajie:dy>50");
                     scrollToEnd();
-                    println("bajie::scroll::$newState");
+                    recyclerView.scrollBy(0,  -totalDy);
                     Handler().postDelayed({
-                        recyclerView.scrollBy(0, -rect.bottom);
-                    }, 1000)
+                    }, 100)
                 } else {
-                    recyclerView.scrollBy(0, -rect.bottom);
+                    recyclerView.scrollBy(0, -totalDy);
                 }
-            }
+//                if(rect.bottom == height) {
+//                    scrollToEnd();
+//                    Handler().postDelayed({
+//                        recyclerView.scrollBy(0, -rect.bottom);
+//                    }, 1000)
+//                } else {
+//                    recyclerView.scrollBy(0, -rect.bottom);
+//                }6
+
+                totalDy = 0;
+//            }
 
 
 //            manager.findViewByPosition(itemCount - 2)!!.getLocalVisibleRect(rect);
@@ -52,9 +62,14 @@ abstract class EndlessRecyclerOnScrollListener: RecyclerView.OnScrollListener() 
 
     }
 
+    var totalDy = 0;
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
+        println("bajie:dy="+dy + ",totoalDy=" + totalDy);
+        totalDy += dy;
     }
+
+
 
     public abstract fun scrollToEnd();
 

@@ -93,7 +93,7 @@ class BookkeepingOutFragment(val type: Int) : BaseFragment<FragmentBookkeepingCh
             }
             mViewModel.getCommonlyList();
         } else if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_TIME_PICKER) {
-            mViewModel.setRecordTime(data!!.getStringExtra("data"))
+            mViewModel.setRecordTime(data!!.getStringExtra("data")!!)
         }
     }
 
