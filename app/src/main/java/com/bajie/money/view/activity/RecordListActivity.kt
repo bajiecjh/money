@@ -39,13 +39,13 @@ class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListView
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-//        overridePendingTransition(R.anim.slide_in_bottom, R.anim.silent);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.silent);
         super.onCreate(savedInstanceState)
     }
 
     override fun finish() {
         super.finish()
-//        overridePendingTransition( R.anim.bottom_silent, R.anim.bottom_out);
+        overridePendingTransition(R.anim.silent, R.anim.slide_out_top);
     }
     override fun init() {
         mBinding.header.back.setOnClickListener(this);
@@ -90,33 +90,37 @@ class RecordListActivity: BaseActivity<ActivityRecordListBinding, RecordListView
         override fun onBindViewHolder(holder: BaseViewHolder<ViewDataBinding>, position: Int) {
             val itemStatus = mItemStatusList[position];
 
-            if(itemStatus.viewType == ItemStatus.VIEW_TYPE_MONTH) {
-                val monthRecord = mData[itemStatus.monthItemIndex];
-                val newHolder = holder as BaseViewHolder<ItemRecordHeaderBinding>;
-                newHolder.binding.setVariable(BR.monthRecord, monthRecord)
-                newHolder.binding.setVariable(BR.balance, monthRecord.income - monthRecord.outlay)
-                newHolder.binding.setVariable(BR.isOpen, mCurrentOpenGroupIndex>=0&&mCurrentOpenGroupIndex == itemStatus.monthItemIndex)
-                newHolder.binding.reference.measure(0, 0);
-                newHolder.binding.reference.post {      // 设置收入支出进度条的长度
-                    val maxWidth = newHolder.binding.reference.measuredWidth;
-                    val incomeLP = newHolder.binding.incomeView.layoutParams;
-                    val income = if(monthRecord.income>0)monthRecord.income else 1.0f
-                    incomeLP.width = (income * maxWidth / mViewModel.maxPrice).toInt();
-                    newHolder.binding.incomeView.layoutParams = incomeLP
-                    val outlayLP = newHolder.binding.outlayView.layoutParams;
-                    val outlay = if(monthRecord.outlay>0)monthRecord.outlay else 1.0f
-                    outlayLP.width = (outlay * maxWidth / mViewModel.maxPrice).toInt();
-                    newHolder.binding.outlayView.layoutParams = outlayLP
+            when (itemStatus.viewType) {
+                ItemStatus.VIEW_TYPE_MONTH -> {
+                    val monthRecord = mData[itemStatus.monthItemIndex];
+                    val newHolder = holder as BaseViewHolder<ItemRecordHeaderBinding>;
+                    newHolder.binding.setVariable(BR.monthRecord, monthRecord)
+                    newHolder.binding.setVariable(BR.balance, monthRecord.income - monthRecord.outlay)
+                    newHolder.binding.setVariable(BR.isOpen, mCurrentOpenGroupIndex>=0&&mCurrentOpenGroupIndex == itemStatus.monthItemIndex)
+                    newHolder.binding.reference.measure(0, 0);
+                    newHolder.binding.reference.post {      // 设置收入支出进度条的长度
+                        val maxWidth = newHolder.binding.reference.measuredWidth;
+                        val incomeLP = newHolder.binding.incomeView.layoutParams;
+                        val income = if(monthRecord.income>0)monthRecord.income else 1.0f
+                        incomeLP.width = (income * maxWidth / mViewModel.maxPrice).toInt();
+                        newHolder.binding.incomeView.layoutParams = incomeLP
+                        val outlayLP = newHolder.binding.outlayView.layoutParams;
+                        val outlay = if(monthRecord.outlay>0)monthRecord.outlay else 1.0f
+                        outlayLP.width = (outlay * maxWidth / mViewModel.maxPrice).toInt();
+                        newHolder.binding.outlayView.layoutParams = outlayLP
+                    }
                 }
-            } else if(itemStatus.viewType == ItemStatus.VIEW_TYPE_DAY) {
-                val dayRecord = mData[itemStatus.monthItemIndex].dayRecords[itemStatus.day];
-                val newHolder = holder as BaseViewHolder<ItemRecordDayBinding>;
-                newHolder.binding.setVariable(BR.record, dayRecord);
-            } else {
-                val record = mData[itemStatus.monthItemIndex].dayRecords[itemStatus.day]!!.records[itemStatus.recordItemIndex];
-                val newHolder = holder as BaseViewHolder<ItemRecordBinding>;
-                newHolder.binding.setVariable(BR.record, record);
-                newHolder.binding.setVariable(BR.setMargin, true);
+                ItemStatus.VIEW_TYPE_DAY -> {
+                    val dayRecord = mData[itemStatus.monthItemIndex].dayRecords[itemStatus.day];
+                    val newHolder = holder as BaseViewHolder<ItemRecordDayBinding>;
+                    newHolder.binding.setVariable(BR.record, dayRecord);
+                }
+                else -> {
+                    val record = mData[itemStatus.monthItemIndex].dayRecords[itemStatus.day]!!.records[itemStatus.recordItemIndex];
+                    val newHolder = holder as BaseViewHolder<ItemRecordBinding>;
+                    newHolder.binding.setVariable(BR.record, record);
+                    newHolder.binding.setVariable(BR.setMargin, true);
+                }
             }
 
             holder.itemView.setOnClickListener{
